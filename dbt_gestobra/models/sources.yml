@@ -1,0 +1,3129 @@
+version: 2
+sources:
+- name: gestobra_public
+  database: gestobra
+  schema: public
+  description: Base de datos transaccional operacional de GestObra en PostgreSQL conteniendo
+    únicamente tablas con registros no vacíos.
+  tables:
+  - name: accessories
+    description: Accesorios y herramientas asociadas a equipos o vehículos de obra.
+    meta:
+      row_count: 2
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: category
+      description: Campo de tipo character varying para almacenar category.
+      data_type: character varying
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+  - name: ai_jobs
+    description: Cola de trabajos asíncronos y tareas procesadas por los agentes de
+      IA.
+    meta:
+      row_count: 8924
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: queue_name
+      description: Campo de tipo text para almacenar queue_name.
+      data_type: text
+    - name: payload
+      description: Campo de tipo json para almacenar payload.
+      data_type: json
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: attempts
+      description: Campo de tipo integer para almacenar attempts.
+      data_type: integer
+    - name: max_attempts
+      description: Campo de tipo integer para almacenar max_attempts.
+      data_type: integer
+    - name: run_at
+      description: Campo de tipo timestamp without time zone para almacenar run_at.
+      data_type: timestamp without time zone
+    - name: locked_at
+      description: Campo de tipo timestamp without time zone para almacenar locked_at.
+      data_type: timestamp without time zone
+    - name: locked_by
+      description: Campo de tipo text para almacenar locked_by.
+      data_type: text
+    - name: last_error
+      description: Campo de tipo text para almacenar last_error.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: cache
+    description: Caché temporal de la aplicación para optimización de rendimiento.
+    meta:
+      row_count: 72
+    columns:
+    - name: key
+      description: Campo de tipo character varying para almacenar key.
+      data_type: character varying
+    - name: value
+      description: Campo de tipo text para almacenar value.
+      data_type: text
+    - name: expiration
+      description: Campo de tipo integer para almacenar expiration.
+      data_type: integer
+  - name: cargos
+    description: Catálogo de cargos, roles y puestos de trabajo del personal.
+    meta:
+      row_count: 36
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: channels
+    description: Canales de comunicación activos (ej. WhatsApp, SMS, Web).
+    meta:
+      row_count: 2
+    columns:
+    - name: code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: checkpoint_blobs
+    description: Bloques de datos persistentes de los flujos de trabajo e hilos de
+      IA.
+    meta:
+      row_count: 36754
+    columns:
+    - name: thread_id
+      description: Clave foránea que referencia al identificador único de 'thread'.
+      data_type: text
+      tests:
+      - not_null
+    - name: checkpoint_ns
+      description: Campo de tipo text para almacenar checkpoint_ns.
+      data_type: text
+    - name: channel
+      description: Campo de tipo text para almacenar channel.
+      data_type: text
+    - name: version
+      description: Campo de tipo text para almacenar version.
+      data_type: text
+    - name: type
+      description: Campo de tipo text para almacenar type.
+      data_type: text
+    - name: blob
+      description: Campo de tipo bytea para almacenar blob.
+      data_type: bytea
+  - name: checkpoint_migrations
+    description: Historial de migraciones de esquema de checkpoints.
+    meta:
+      row_count: 10
+    columns:
+    - name: v
+      description: Campo de tipo integer para almacenar v.
+      data_type: integer
+  - name: checkpoint_writes
+    description: Registros de escrituras intermedias de agentes de IA.
+    meta:
+      row_count: 37201
+    columns:
+    - name: thread_id
+      description: Clave foránea que referencia al identificador único de 'thread'.
+      data_type: text
+      tests:
+      - not_null
+    - name: checkpoint_ns
+      description: Campo de tipo text para almacenar checkpoint_ns.
+      data_type: text
+    - name: checkpoint_id
+      description: Clave foránea que referencia al identificador único de 'checkpoint'.
+      data_type: text
+      tests:
+      - not_null
+    - name: task_id
+      description: Clave foránea que referencia al identificador único de 'task'.
+      data_type: text
+      tests:
+      - not_null
+    - name: idx
+      description: Campo de tipo integer para almacenar idx.
+      data_type: integer
+    - name: channel
+      description: Campo de tipo text para almacenar channel.
+      data_type: text
+    - name: type
+      description: Campo de tipo text para almacenar type.
+      data_type: text
+    - name: blob
+      description: Campo de tipo bytea para almacenar blob.
+      data_type: bytea
+    - name: task_path
+      description: Campo de tipo text para almacenar task_path.
+      data_type: text
+  - name: checkpoints
+    description: Puntos de control e historial de conversaciones de agentes de IA.
+    meta:
+      row_count: 26126
+    columns:
+    - name: thread_id
+      description: Clave foránea que referencia al identificador único de 'thread'.
+      data_type: text
+      tests:
+      - not_null
+    - name: checkpoint_ns
+      description: Campo de tipo text para almacenar checkpoint_ns.
+      data_type: text
+    - name: checkpoint_id
+      description: Clave foránea que referencia al identificador único de 'checkpoint'.
+      data_type: text
+      tests:
+      - not_null
+    - name: parent_checkpoint_id
+      description: Clave foránea que referencia al identificador único de 'parent_checkpoint'.
+      data_type: text
+    - name: type
+      description: Campo de tipo text para almacenar type.
+      data_type: text
+    - name: checkpoint
+      description: Campo de tipo jsonb para almacenar checkpoint.
+      data_type: jsonb
+    - name: metadata
+      description: Campo de tipo jsonb para almacenar metadata.
+      data_type: jsonb
+  - name: cities
+    description: Catálogo de ciudades y municipios.
+    meta:
+      row_count: 802
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: state_id
+      description: Clave foránea que referencia al identificador único de 'state'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+  - name: companies
+    description: Información de empresas, clientes y contratas principales.
+    meta:
+      row_count: 15
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: tax_id
+      description: Clave foránea que referencia al identificador único de 'tax'.
+      data_type: character varying
+      tests:
+      - not_null
+    - name: country_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: address
+      description: Campo de tipo character varying para almacenar address.
+      data_type: character varying
+    - name: state
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: city
+      description: Campo de tipo character varying para almacenar city.
+      data_type: character varying
+    - name: postal_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: character varying
+    - name: email
+      description: Dirección de correo electrónico.
+      data_type: character varying
+    - name: website
+      description: Campo de tipo character varying para almacenar website.
+      data_type: character varying
+    - name: iban
+      description: Campo de tipo character varying para almacenar iban.
+      data_type: character varying
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+  - name: countries
+    description: Catálogo de países y prefijos telefónicos.
+    meta:
+      row_count: 2
+    columns:
+    - name: code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: phone_prefix
+      description: Número de teléfono de contacto.
+      data_type: character varying
+  - name: daily_sessions
+    description: Sesiones diarias de control horario e inicio/cierre de jornada laboral.
+    meta:
+      row_count: 2306
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: session_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: state
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: active_task_id
+      description: Clave foránea que referencia al identificador único de 'active_task'.
+      data_type: bigint
+    - name: pending_action
+      description: Campo de tipo character varying para almacenar pending_action.
+      data_type: character varying
+    - name: started_at
+      description: Campo de tipo timestamp without time zone para almacenar started_at.
+      data_type: timestamp without time zone
+    - name: finished_at
+      description: Campo de tipo timestamp without time zone para almacenar finished_at.
+      data_type: timestamp without time zone
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: active_task_task_id
+      description: Clave foránea que referencia al identificador único de 'active_task_task'.
+      data_type: bigint
+    - name: active_task_started_at
+      description: Campo de tipo timestamp without time zone para almacenar active_task_started_at.
+      data_type: timestamp without time zone
+    - name: state_context
+      description: Estado actual del flujo de trabajo.
+      data_type: jsonb
+    - name: hourly_summary_cursor_at
+      description: Campo de tipo timestamp with time zone para almacenar hourly_summary_cursor_at.
+      data_type: timestamp with time zone
+    - name: active_project_id
+      description: Clave foránea que referencia al identificador único de 'active_project'.
+      data_type: bigint
+    - name: active_project_schedule_id
+      description: Clave foránea que referencia al identificador único de 'active_project_schedule'.
+      data_type: bigint
+    - name: active_project_started_at
+      description: Campo de tipo timestamp with time zone para almacenar active_project_started_at.
+      data_type: timestamp with time zone
+    - name: active_project_imputation_id
+      description: Clave foránea que referencia al identificador único de 'active_project_imputation'.
+      data_type: bigint
+  - name: file_types
+    description: Categorías y tipos de archivos adjuntos (planos, albaranes, facturas).
+    meta:
+      row_count: 7
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: fileable_type
+      description: Campo de tipo character varying para almacenar fileable_type.
+      data_type: character varying
+    - name: fileable_id
+      description: Clave foránea que referencia al identificador único de 'fileable'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: files
+    description: Registro de archivos y documentos subidos al sistema.
+    meta:
+      row_count: 12
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: storage_disk
+      description: Campo de tipo character varying para almacenar storage_disk.
+      data_type: character varying
+    - name: storage_path
+      description: Campo de tipo text para almacenar storage_path.
+      data_type: text
+    - name: original_name
+      description: Campo de tipo text para almacenar original_name.
+      data_type: text
+    - name: mime_type
+      description: Campo de tipo character varying para almacenar mime_type.
+      data_type: character varying
+    - name: size_bytes
+      description: Campo de tipo bigint para almacenar size_bytes.
+      data_type: bigint
+    - name: sha256
+      description: Campo de tipo character varying para almacenar sha256.
+      data_type: character varying
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+    - name: file_type_id
+      description: Clave foránea que referencia al identificador único de 'file_type'.
+      data_type: bigint
+    - name: uploaded_by_user_id
+      description: Clave foránea que referencia al identificador único de 'uploaded_by_user'.
+      data_type: bigint
+    - name: version
+      description: Campo de tipo integer para almacenar version.
+      data_type: integer
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: comment
+      description: Campo de tipo text para almacenar comment.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: flyway_schema_history
+    description: Historial de migraciones de base de datos Flyway.
+    meta:
+      row_count: 47
+    columns:
+    - name: installed_rank
+      description: Campo de tipo integer para almacenar installed_rank.
+      data_type: integer
+    - name: version
+      description: Campo de tipo character varying para almacenar version.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: character varying
+    - name: type
+      description: Campo de tipo character varying para almacenar type.
+      data_type: character varying
+    - name: script
+      description: Campo de tipo character varying para almacenar script.
+      data_type: character varying
+    - name: checksum
+      description: Campo de tipo integer para almacenar checksum.
+      data_type: integer
+    - name: installed_by
+      description: Campo de tipo character varying para almacenar installed_by.
+      data_type: character varying
+    - name: installed_on
+      description: Campo de tipo timestamp without time zone para almacenar installed_on.
+      data_type: timestamp without time zone
+    - name: execution_time
+      description: Campo de tipo integer para almacenar execution_time.
+      data_type: integer
+    - name: success
+      description: Campo de tipo boolean para almacenar success.
+      data_type: boolean
+  - name: messages
+    description: Mensajes intercambiados en la plataforma y vía bot de WhatsApp.
+    meta:
+      row_count: 2904
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: person_id
+      description: Clave foránea que referencia al identificador único de 'person'.
+      data_type: bigint
+    - name: contact_name
+      description: Campo de tipo character varying para almacenar contact_name.
+      data_type: character varying
+    - name: contact_phone
+      description: Número de teléfono de contacto.
+      data_type: character varying
+    - name: user_phone
+      description: Número de teléfono de contacto.
+      data_type: character varying
+    - name: content
+      description: Campo de tipo text para almacenar content.
+      data_type: text
+    - name: channel
+      description: Campo de tipo character varying para almacenar channel.
+      data_type: character varying
+    - name: direction
+      description: Campo de tipo character varying para almacenar direction.
+      data_type: character varying
+    - name: type
+      description: Campo de tipo character varying para almacenar type.
+      data_type: character varying
+    - name: ai_summary
+      description: Campo de tipo text para almacenar ai_summary.
+      data_type: text
+    - name: audio_url
+      description: Campo de tipo character varying para almacenar audio_url.
+      data_type: character varying
+    - name: call_duration
+      description: Duración o tiempo registrado en horas.
+      data_type: integer
+    - name: is_read
+      description: Indicador booleano que determina el estado de 'is_read'.
+      data_type: boolean
+    - name: read_at
+      description: Campo de tipo timestamp without time zone para almacenar read_at.
+      data_type: timestamp without time zone
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: migrations
+    description: Migraciones de estructura de base de datos.
+    meta:
+      row_count: 36
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: integer
+      tests:
+      - not_null
+      - unique
+    - name: migration
+      description: Campo de tipo character varying para almacenar migration.
+      data_type: character varying
+    - name: batch
+      description: Campo de tipo integer para almacenar batch.
+      data_type: integer
+  - name: milestones
+    description: Hitos y fases principales de los proyectos de obra.
+    meta:
+      row_count: 7
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: project_id
+      description: Clave foránea que referencia al identificador único de 'project'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: title
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: type
+      description: Campo de tipo character varying para almacenar type.
+      data_type: character varying
+    - name: milestone_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: completed
+      description: Campo de tipo boolean para almacenar completed.
+      data_type: boolean
+    - name: order
+      description: Campo de tipo integer para almacenar order.
+      data_type: integer
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+  - name: notification_channels
+    description: Configuración de canales para el envío de notificaciones.
+    meta:
+      row_count: 1798
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: notification_id
+      description: Clave foránea que referencia al identificador único de 'notification'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: channel_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: external_message_id
+      description: Clave foránea que referencia al identificador único de 'external_message'.
+      data_type: character varying
+    - name: error_message
+      description: Campo de tipo text para almacenar error_message.
+      data_type: text
+    - name: sent_at
+      description: Campo de tipo timestamp without time zone para almacenar sent_at.
+      data_type: timestamp without time zone
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: notification_items
+    description: Elementos y plantillas de notificaciones del sistema.
+    meta:
+      row_count: 182
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: notification_id
+      description: Clave foránea que referencia al identificador único de 'notification'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: item_type
+      description: Campo de tipo character varying para almacenar item_type.
+      data_type: character varying
+    - name: actor_user_id
+      description: Clave foránea que referencia al identificador único de 'actor_user'.
+      data_type: bigint
+    - name: actor_person_id
+      description: Clave foránea que referencia al identificador único de 'actor_person'.
+      data_type: bigint
+    - name: title
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: body
+      description: Campo de tipo text para almacenar body.
+      data_type: text
+    - name: happened_at
+      description: Campo de tipo timestamp without time zone para almacenar happened_at.
+      data_type: timestamp without time zone
+    - name: metadata_json
+      description: Campo de tipo text para almacenar metadata_json.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: notification_type_channels
+    description: Asociación entre tipos de notificaciones y canales de entrega.
+    meta:
+      row_count: 17
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: notification_type_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: channel_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: default_enabled
+      description: Campo de tipo boolean para almacenar default_enabled.
+      data_type: boolean
+    - name: mandatory
+      description: Campo de tipo boolean para almacenar mandatory.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: notification_types
+    description: Tipos y eventos que disparan notificaciones.
+    meta:
+      row_count: 10
+    columns:
+    - name: code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: character varying
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: notifications
+    description: Historial de notificaciones enviadas a usuarios y operarios.
+    meta:
+      row_count: 1814
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: notification_type_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: title
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: body
+      description: Campo de tipo text para almacenar body.
+      data_type: text
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: priority
+      description: Campo de tipo character varying para almacenar priority.
+      data_type: character varying
+    - name: metadata_json
+      description: Campo de tipo text para almacenar metadata_json.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: sent_at
+      description: Campo de tipo timestamp without time zone para almacenar sent_at.
+      data_type: timestamp without time zone
+    - name: read_at
+      description: Campo de tipo timestamp without time zone para almacenar read_at.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: aggregation_key
+      description: Campo de tipo character varying para almacenar aggregation_key.
+      data_type: character varying
+    - name: aggregation_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: aggregation_mode
+      description: Campo de tipo character varying para almacenar aggregation_mode.
+      data_type: character varying
+    - name: source_entity_type
+      description: Campo de tipo character varying para almacenar source_entity_type.
+      data_type: character varying
+    - name: source_entity_id
+      description: Clave foránea que referencia al identificador único de 'source_entity'.
+      data_type: character varying
+    - name: last_activity_at
+      description: Campo de tipo timestamp without time zone para almacenar last_activity_at.
+      data_type: timestamp without time zone
+    - name: event_count
+      description: Campo de tipo integer para almacenar event_count.
+      data_type: integer
+    - name: payload_json
+      description: Campo de tipo text para almacenar payload_json.
+      data_type: text
+  - name: password_reset_tokens
+    description: Tokens de seguridad para restablecimiento de contraseñas.
+    meta:
+      row_count: 1
+    columns:
+    - name: email
+      description: Dirección de correo electrónico.
+      data_type: character varying
+    - name: token
+      description: Campo de tipo character varying para almacenar token.
+      data_type: character varying
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+  - name: people
+    description: Personal, operarios, encargados y técnicos de la empresa.
+    meta:
+      row_count: 178
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: company_id
+      description: Clave foránea que referencia al identificador único de 'company'.
+      data_type: bigint
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: character varying
+    - name: phone_secondary
+      description: Número de teléfono de contacto.
+      data_type: character varying
+    - name: email
+      description: Dirección de correo electrónico.
+      data_type: character varying
+    - name: notes
+      description: Campo de tipo text para almacenar notes.
+      data_type: text
+    - name: is_client
+      description: Indicador booleano que determina el estado de 'is_client'.
+      data_type: boolean
+    - name: is_worker
+      description: Indicador booleano que determina el estado de 'is_worker'.
+      data_type: boolean
+    - name: is_external_worker
+      description: Indicador booleano que determina el estado de 'is_external_worker'.
+      data_type: boolean
+    - name: is_supplier
+      description: Indicador booleano que determina el estado de 'is_supplier'.
+      data_type: boolean
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+    - name: billing_type
+      description: Campo de tipo character varying para almacenar billing_type.
+      data_type: character varying
+    - name: language
+      description: Campo de tipo character varying para almacenar language.
+      data_type: character varying
+    - name: cargo_id
+      description: Clave foránea que referencia al identificador único de 'cargo'.
+      data_type: bigint
+  - name: person_absences
+    description: Registro de ausencias, vacaciones y bajas laborales del personal.
+    meta:
+      row_count: 12
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: person_id
+      description: Clave foránea que referencia al identificador único de 'person'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: start_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: end_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: reason
+      description: Campo de tipo character varying para almacenar reason.
+      data_type: character varying
+    - name: comments
+      description: Campo de tipo text para almacenar comments.
+      data_type: text
+    - name: created_by_user_id
+      description: Clave foránea que referencia al identificador único de 'created_by_user'.
+      data_type: bigint
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: person_specialty
+    description: Especialidades y competencias técnicas asignadas a cada persona.
+    meta:
+      row_count: 62
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: person_id
+      description: Clave foránea que referencia al identificador único de 'person'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: specialty_id
+      description: Clave foránea que referencia al identificador único de 'specialty'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: personal_access_tokens
+    description: Tokens de acceso personal para la API.
+    meta:
+      row_count: 100
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: tokenable_type
+      description: Campo de tipo character varying para almacenar tokenable_type.
+      data_type: character varying
+    - name: tokenable_id
+      description: Clave foránea que referencia al identificador único de 'tokenable'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: text
+    - name: token
+      description: Campo de tipo character varying para almacenar token.
+      data_type: character varying
+    - name: abilities
+      description: Campo de tipo text para almacenar abilities.
+      data_type: text
+    - name: last_used_at
+      description: Campo de tipo timestamp without time zone para almacenar last_used_at.
+      data_type: timestamp without time zone
+    - name: expires_at
+      description: Campo de tipo timestamp without time zone para almacenar expires_at.
+      data_type: timestamp without time zone
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: plan_price_versions
+    description: Versiones de precios de planes de suscripción.
+    meta:
+      row_count: 3
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: plan_id
+      description: Clave foránea que referencia al identificador único de 'plan'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: stripe_price_id
+      description: Clave foránea que referencia al identificador único de 'stripe_price'.
+      data_type: character varying
+    - name: unit_amount
+      description: Campo de tipo bigint para almacenar unit_amount.
+      data_type: bigint
+    - name: currency
+      description: Campo de tipo character varying para almacenar currency.
+      data_type: character varying
+    - name: billing_interval
+      description: Campo de tipo character varying para almacenar billing_interval.
+      data_type: character varying
+    - name: interval_count
+      description: Campo de tipo integer para almacenar interval_count.
+      data_type: integer
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: sync_status
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: valid_from
+      description: Campo de tipo timestamp without time zone para almacenar valid_from.
+      data_type: timestamp without time zone
+    - name: valid_to
+      description: Campo de tipo timestamp without time zone para almacenar valid_to.
+      data_type: timestamp without time zone
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: plans
+    description: Planes de suscripción comercial del servicio.
+    meta:
+      row_count: 4
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: price_per_user
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: currency
+      description: Campo de tipo character varying para almacenar currency.
+      data_type: character varying
+    - name: limits_json
+      description: Campo de tipo jsonb para almacenar limits_json.
+      data_type: jsonb
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+    - name: is_custom
+      description: Indicador booleano que determina el estado de 'is_custom'.
+      data_type: boolean
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: max_gestors
+      description: Campo de tipo integer para almacenar max_gestors.
+      data_type: integer
+    - name: max_operario_jefe
+      description: Campo de tipo integer para almacenar max_operario_jefe.
+      data_type: integer
+    - name: max_operarios
+      description: Campo de tipo integer para almacenar max_operarios.
+      data_type: integer
+    - name: extra_gestor_price
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: extra_operario_jefe_price
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: extra_operario_price
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: monthly_price
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: ai_credits_monthly
+      description: Campo de tipo integer para almacenar ai_credits_monthly.
+      data_type: integer
+    - name: ai_pack_a_credits
+      description: Campo de tipo integer para almacenar ai_pack_a_credits.
+      data_type: integer
+    - name: ai_pack_a_price
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: ai_pack_b_credits
+      description: Campo de tipo integer para almacenar ai_pack_b_credits.
+      data_type: integer
+    - name: ai_pack_b_price
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: ai_pack_c_credits
+      description: Campo de tipo integer para almacenar ai_pack_c_credits.
+      data_type: integer
+    - name: ai_pack_c_price
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: billing_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: stripe_product_id
+      description: Clave foránea que referencia al identificador único de 'stripe_product'.
+      data_type: character varying
+    - name: is_public
+      description: Indicador booleano que determina el estado de 'is_public'.
+      data_type: boolean
+  - name: project_comments
+    description: Comentarios y observaciones registrados en proyectos y obras.
+    meta:
+      row_count: 361
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: project_id
+      description: Clave foránea que referencia al identificador único de 'project'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: author_user_id
+      description: Clave foránea que referencia al identificador único de 'author_user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: body
+      description: Campo de tipo text para almacenar body.
+      data_type: text
+    - name: files
+      description: Campo de tipo jsonb para almacenar files.
+      data_type: jsonb
+    - name: tags
+      description: Campo de tipo jsonb para almacenar tags.
+      data_type: jsonb
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: original_body
+      description: Campo de tipo text para almacenar original_body.
+      data_type: text
+    - name: parent_comment_id
+      description: Clave foránea que referencia al identificador único de 'parent_comment'.
+      data_type: bigint
+  - name: project_imputations
+    description: Imputaciones de horas trabajadas y costes directos a proyectos.
+    meta:
+      row_count: 534
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: project_id
+      description: Clave foránea que referencia al identificador único de 'project'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: resource_id
+      description: Clave foránea que referencia al identificador único de 'resource'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_by_user_id
+      description: Clave foránea que referencia al identificador único de 'created_by_user'.
+      data_type: bigint
+    - name: type
+      description: Campo de tipo character varying para almacenar type.
+      data_type: character varying
+    - name: date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: amount
+      description: Campo de tipo numeric para almacenar amount.
+      data_type: numeric
+    - name: minutes
+      description: Campo de tipo integer para almacenar minutes.
+      data_type: integer
+    - name: hourly_rate
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: file_path
+      description: Campo de tipo character varying para almacenar file_path.
+      data_type: character varying
+    - name: file_name
+      description: Campo de tipo character varying para almacenar file_name.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: task_id
+      description: Clave foránea que referencia al identificador único de 'task'.
+      data_type: bigint
+    - name: started_at
+      description: Campo de tipo timestamp without time zone para almacenar started_at.
+      data_type: timestamp without time zone
+    - name: finished_at
+      description: Campo de tipo timestamp without time zone para almacenar finished_at.
+      data_type: timestamp without time zone
+    - name: original_minutes
+      description: Campo de tipo integer para almacenar original_minutes.
+      data_type: integer
+    - name: is_corrected
+      description: Indicador booleano que determina el estado de 'is_corrected'.
+      data_type: boolean
+    - name: correction_reason
+      description: Campo de tipo text para almacenar correction_reason.
+      data_type: text
+    - name: corrected_by_user_id
+      description: Clave foránea que referencia al identificador único de 'corrected_by_user'.
+      data_type: bigint
+    - name: corrected_at
+      description: Campo de tipo timestamp with time zone para almacenar corrected_at.
+      data_type: timestamp with time zone
+    - name: correction_source
+      description: Campo de tipo character varying para almacenar correction_source.
+      data_type: character varying
+  - name: project_schedule_resource
+    description: Asignación de recursos (operarios/maquinaria) a cronogramas de obras.
+    meta:
+      row_count: 7151
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: project_schedule_id
+      description: Clave foránea que referencia al identificador único de 'project_schedule'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: resource_id
+      description: Clave foránea que referencia al identificador único de 'resource'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: is_responsible
+      description: Indicador booleano que determina el estado de 'is_responsible'.
+      data_type: boolean
+    - name: shift_minutes
+      description: Campo de tipo integer para almacenar shift_minutes.
+      data_type: integer
+    - name: notes
+      description: Campo de tipo text para almacenar notes.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: order_index
+      description: Campo de tipo integer para almacenar order_index.
+      data_type: integer
+  - name: project_schedules
+    description: Cronogramas, planificación temporal y diagramas de Gantt de obras.
+    meta:
+      row_count: 738
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: project_id
+      description: Clave foránea que referencia al identificador único de 'project'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: scheduled_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: order
+      description: Campo de tipo integer para almacenar order.
+      data_type: integer
+    - name: type
+      description: Campo de tipo character varying para almacenar type.
+      data_type: character varying
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: project_specialty
+    description: Especialidades requeridas para la ejecución de proyectos.
+    meta:
+      row_count: 1
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: project_id
+      description: Clave foránea que referencia al identificador único de 'project'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: specialty_id
+      description: Clave foránea que referencia al identificador único de 'specialty'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: projects
+    description: Obras, proyectos de construcción y centros de trabajo.
+    meta:
+      row_count: 314
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: address
+      description: Campo de tipo character varying para almacenar address.
+      data_type: character varying
+    - name: country_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: state
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: city
+      description: Campo de tipo character varying para almacenar city.
+      data_type: character varying
+    - name: postal_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: owner_user_id
+      description: Clave foránea que referencia al identificador único de 'owner_user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: start_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: end_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: actual_end_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: budget
+      description: Campo de tipo numeric para almacenar budget.
+      data_type: numeric
+    - name: actual_cost
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: hourly_rate
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: project_type
+      description: Campo de tipo character varying para almacenar project_type.
+      data_type: character varying
+    - name: client_person_id
+      description: Clave foránea que referencia al identificador único de 'client_person'.
+      data_type: bigint
+    - name: leader_person_id
+      description: Clave foránea que referencia al identificador único de 'leader_person'.
+      data_type: bigint
+    - name: working_days
+      description: Campo de tipo jsonb para almacenar working_days.
+      data_type: jsonb
+    - name: notes
+      description: Campo de tipo text para almacenar notes.
+      data_type: text
+    - name: total_area
+      description: Campo de tipo numeric para almacenar total_area.
+      data_type: numeric
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: planner_color
+      description: Campo de tipo character varying para almacenar planner_color.
+      data_type: character varying
+    - name: actual_start_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+  - name: reports
+    description: Informes y partes de trabajo generados en la plataforma.
+    meta:
+      row_count: 154
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_by_user_id
+      description: Clave foránea que referencia al identificador único de 'created_by_user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: type
+      description: Campo de tipo character varying para almacenar type.
+      data_type: character varying
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: params_json
+      description: Campo de tipo jsonb para almacenar params_json.
+      data_type: jsonb
+    - name: file_id
+      description: Clave foránea que referencia al identificador único de 'file'.
+      data_type: bigint
+    - name: error_text
+      description: Campo de tipo text para almacenar error_text.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: resources
+    description: Recursos disponibles (equipos, vehículos, maquinaria, personal).
+    meta:
+      row_count: 184
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: type
+      description: Campo de tipo character varying para almacenar type.
+      data_type: character varying
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: nickname
+      description: Campo de tipo character varying para almacenar nickname.
+      data_type: character varying
+    - name: hourly_rate
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+    - name: daily_capacity_minutes
+      description: Campo de tipo integer para almacenar daily_capacity_minutes.
+      data_type: integer
+  - name: sessions
+    description: Sesiones de usuarios en la plataforma web.
+    meta:
+      row_count: 19
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: character varying
+      tests:
+      - not_null
+      - unique
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+    - name: ip_address
+      description: Campo de tipo character varying para almacenar ip_address.
+      data_type: character varying
+    - name: user_agent
+      description: Campo de tipo text para almacenar user_agent.
+      data_type: text
+    - name: payload
+      description: Campo de tipo text para almacenar payload.
+      data_type: text
+    - name: last_activity
+      description: Campo de tipo integer para almacenar last_activity.
+      data_type: integer
+  - name: specialties
+    description: Catálogo de especialidades técnicas de construcción.
+    meta:
+      row_count: 29
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: color
+      description: Campo de tipo character varying para almacenar color.
+      data_type: character varying
+    - name: icon
+      description: Campo de tipo character varying para almacenar icon.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: specialty_task
+    description: Relación entre especialidades y tareas operativas.
+    meta:
+      row_count: 305
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: specialty_id
+      description: Clave foránea que referencia al identificador único de 'specialty'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: task_id
+      description: Clave foránea que referencia al identificador único de 'task'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: specialty_task_template
+    description: Plantillas de tareas asociadas a especialidades.
+    meta:
+      row_count: 8
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: task_template_id
+      description: Clave foránea que referencia al identificador único de 'task_template'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: specialty_id
+      description: Clave foránea que referencia al identificador único de 'specialty'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: specialty_user
+    description: Asignación de especialidades a usuarios.
+    meta:
+      row_count: 23
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: specialty_id
+      description: Clave foránea que referencia al identificador único de 'specialty'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: states
+    description: Provincias o estados geográficos.
+    meta:
+      row_count: 68
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: country_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+  - name: task_comments
+    description: Comentarios y notas sobre tareas específicas.
+    meta:
+      row_count: 216
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: task_id
+      description: Clave foránea que referencia al identificador único de 'task'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: author_user_id
+      description: Clave foránea que referencia al identificador único de 'author_user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: body
+      description: Campo de tipo text para almacenar body.
+      data_type: text
+    - name: files
+      description: Campo de tipo jsonb para almacenar files.
+      data_type: jsonb
+    - name: tags
+      description: Campo de tipo jsonb para almacenar tags.
+      data_type: jsonb
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: original_body
+      description: Campo de tipo text para almacenar original_body.
+      data_type: text
+    - name: parent_comment_id
+      description: Clave foránea que referencia al identificador único de 'parent_comment'.
+      data_type: bigint
+  - name: task_recurrences
+    description: Configuración de recurrencia para tareas periódicas.
+    meta:
+      row_count: 12
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_by_user_id
+      description: Clave foránea que referencia al identificador único de 'created_by_user'.
+      data_type: bigint
+    - name: frequency
+      description: Campo de tipo character varying para almacenar frequency.
+      data_type: character varying
+    - name: weekdays
+      description: Campo de tipo jsonb para almacenar weekdays.
+      data_type: jsonb
+    - name: day_of_month
+      description: Campo de tipo smallint para almacenar day_of_month.
+      data_type: smallint
+    - name: start_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: end_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: occurrences_count
+      description: Campo de tipo integer para almacenar occurrences_count.
+      data_type: integer
+    - name: base_title
+      description: Campo de tipo character varying para almacenar base_title.
+      data_type: character varying
+    - name: base_description
+      description: Campo de tipo text para almacenar base_description.
+      data_type: text
+    - name: project_id
+      description: Clave foránea que referencia al identificador único de 'project'.
+      data_type: bigint
+    - name: estimated_hours
+      description: Duración o tiempo registrado en horas.
+      data_type: numeric
+    - name: default_operators
+      description: Campo de tipo jsonb para almacenar default_operators.
+      data_type: jsonb
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: tasks_generated
+      description: Importe monetario o tarifa en euros (€).
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: priority
+      description: Campo de tipo character varying para almacenar priority.
+      data_type: character varying
+    - name: source
+      description: Campo de tipo character varying para almacenar source.
+      data_type: character varying
+    - name: country_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: specialty_ids
+      description: Campo de tipo jsonb para almacenar specialty_ids.
+      data_type: jsonb
+  - name: task_schedule_resource
+    description: Recursos asignados a la programación de tareas.
+    meta:
+      row_count: 2992
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: task_schedule_id
+      description: Clave foránea que referencia al identificador único de 'task_schedule'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: resource_id
+      description: Clave foránea que referencia al identificador único de 'resource'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: is_responsible
+      description: Indicador booleano que determina el estado de 'is_responsible'.
+      data_type: boolean
+    - name: shift_minutes
+      description: Campo de tipo integer para almacenar shift_minutes.
+      data_type: integer
+    - name: worked_minutes
+      description: Campo de tipo integer para almacenar worked_minutes.
+      data_type: integer
+    - name: imputed_minutes
+      description: Campo de tipo integer para almacenar imputed_minutes.
+      data_type: integer
+    - name: started_at
+      description: Campo de tipo timestamp without time zone para almacenar started_at.
+      data_type: timestamp without time zone
+    - name: finished_at
+      description: Campo de tipo timestamp without time zone para almacenar finished_at.
+      data_type: timestamp without time zone
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: order_index
+      description: Campo de tipo integer para almacenar order_index.
+      data_type: integer
+  - name: task_schedules
+    description: Programación temporal de tareas individuales.
+    meta:
+      row_count: 1690
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: task_id
+      description: Clave foránea que referencia al identificador único de 'task'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: scheduled_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: order
+      description: Campo de tipo integer para almacenar order.
+      data_type: integer
+    - name: type
+      description: Campo de tipo character varying para almacenar type.
+      data_type: character varying
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: task_templates
+    description: Plantillas reutilizables para la creación rápida de tareas.
+    meta:
+      row_count: 28
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: created_by_user_id
+      description: Clave foránea que referencia al identificador único de 'created_by_user'.
+      data_type: bigint
+    - name: person_id
+      description: Clave foránea que referencia al identificador único de 'person'.
+      data_type: bigint
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: estimated_hours
+      description: Duración o tiempo registrado en horas.
+      data_type: numeric
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: leader_person_id
+      description: Clave foránea que referencia al identificador único de 'leader_person'.
+      data_type: bigint
+    - name: priority
+      description: Campo de tipo character varying para almacenar priority.
+      data_type: character varying
+    - name: source
+      description: Campo de tipo character varying para almacenar source.
+      data_type: character varying
+    - name: shift_hours
+      description: Duración o tiempo registrado en horas.
+      data_type: numeric
+    - name: hourly_rate
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: address
+      description: Campo de tipo text para almacenar address.
+      data_type: text
+    - name: country_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: state
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: city
+      description: Campo de tipo character varying para almacenar city.
+      data_type: character varying
+    - name: postal_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: post_complete_enabled
+      description: Campo de tipo boolean para almacenar post_complete_enabled.
+      data_type: boolean
+    - name: post_complete_action
+      description: Campo de tipo character varying para almacenar post_complete_action.
+      data_type: character varying
+    - name: post_complete_message
+      description: Campo de tipo text para almacenar post_complete_message.
+      data_type: text
+    - name: post_cancel_enabled
+      description: Campo de tipo boolean para almacenar post_cancel_enabled.
+      data_type: boolean
+    - name: post_cancel_action
+      description: Campo de tipo character varying para almacenar post_cancel_action.
+      data_type: character varying
+    - name: post_cancel_message
+      description: Campo de tipo text para almacenar post_cancel_message.
+      data_type: text
+    - name: default_operators
+      description: Campo de tipo jsonb para almacenar default_operators.
+      data_type: jsonb
+    - name: template_type
+      description: Campo de tipo character varying para almacenar template_type.
+      data_type: character varying
+    - name: frequency
+      description: Campo de tipo character varying para almacenar frequency.
+      data_type: character varying
+    - name: weekdays
+      description: Campo de tipo jsonb para almacenar weekdays.
+      data_type: jsonb
+    - name: day_of_month
+      description: Campo de tipo smallint para almacenar day_of_month.
+      data_type: smallint
+    - name: end_mode
+      description: Campo de tipo character varying para almacenar end_mode.
+      data_type: character varying
+    - name: occurrences_count
+      description: Campo de tipo smallint para almacenar occurrences_count.
+      data_type: smallint
+    - name: working_days
+      description: Campo de tipo jsonb para almacenar working_days.
+      data_type: jsonb
+  - name: tasks
+    description: Tareas, partidas de obra y actividades operativas.
+    meta:
+      row_count: 910
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: project_id
+      description: Clave foránea que referencia al identificador único de 'project'.
+      data_type: bigint
+    - name: created_by_user_id
+      description: Clave foránea que referencia al identificador único de 'created_by_user'.
+      data_type: bigint
+    - name: person_id
+      description: Clave foránea que referencia al identificador único de 'person'.
+      data_type: bigint
+    - name: leader_person_id
+      description: Clave foránea que referencia al identificador único de 'leader_person'.
+      data_type: bigint
+    - name: task_recurrence_id
+      description: Clave foránea que referencia al identificador único de 'task_recurrence'.
+      data_type: bigint
+    - name: code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: title
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: description
+      description: Descripción detallada o notas adicionales.
+      data_type: text
+    - name: address
+      description: Campo de tipo character varying para almacenar address.
+      data_type: character varying
+    - name: country_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: state
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: city
+      description: Campo de tipo character varying para almacenar city.
+      data_type: character varying
+    - name: postal_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: order
+      description: Campo de tipo integer para almacenar order.
+      data_type: integer
+    - name: priority
+      description: Campo de tipo character varying para almacenar priority.
+      data_type: character varying
+    - name: started_at
+      description: Campo de tipo timestamp without time zone para almacenar started_at.
+      data_type: timestamp without time zone
+    - name: completed_at
+      description: Campo de tipo timestamp without time zone para almacenar completed_at.
+      data_type: timestamp without time zone
+    - name: time_to_complete
+      description: Campo de tipo numeric para almacenar time_to_complete.
+      data_type: numeric
+    - name: estimated_hours
+      description: Duración o tiempo registrado en horas.
+      data_type: numeric
+    - name: shift_hours
+      description: Duración o tiempo registrado en horas.
+      data_type: numeric
+    - name: hourly_rate
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: actual_cost
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: default_operators
+      description: Campo de tipo jsonb para almacenar default_operators.
+      data_type: jsonb
+    - name: working_days
+      description: Campo de tipo jsonb para almacenar working_days.
+      data_type: jsonb
+    - name: source
+      description: Campo de tipo character varying para almacenar source.
+      data_type: character varying
+    - name: source_name
+      description: Campo de tipo character varying para almacenar source_name.
+      data_type: character varying
+    - name: source_phone
+      description: Número de teléfono de contacto.
+      data_type: character varying
+    - name: source_email
+      description: Dirección de correo electrónico.
+      data_type: character varying
+    - name: post_complete_enabled
+      description: Campo de tipo boolean para almacenar post_complete_enabled.
+      data_type: boolean
+    - name: post_complete_action
+      description: Campo de tipo character varying para almacenar post_complete_action.
+      data_type: character varying
+    - name: post_complete_message
+      description: Campo de tipo text para almacenar post_complete_message.
+      data_type: text
+    - name: post_cancel_enabled
+      description: Campo de tipo boolean para almacenar post_cancel_enabled.
+      data_type: boolean
+    - name: post_cancel_action
+      description: Campo de tipo character varying para almacenar post_cancel_action.
+      data_type: character varying
+    - name: post_cancel_message
+      description: Campo de tipo text para almacenar post_cancel_message.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+    - name: recurrence_scheduled_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+  - name: team_absences
+    description: Ausencias registradas a nivel de equipo o cuadrilla.
+    meta:
+      row_count: 34
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: start_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: end_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: reason
+      description: Campo de tipo character varying para almacenar reason.
+      data_type: character varying
+    - name: comments
+      description: Campo de tipo text para almacenar comments.
+      data_type: text
+    - name: created_by_user_id
+      description: Clave foránea que referencia al identificador único de 'created_by_user'.
+      data_type: bigint
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: team_invitations
+    description: Invitaciones enviadas a nuevos miembros para unirse a un equipo.
+    meta:
+      row_count: 6
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: email
+      description: Dirección de correo electrónico.
+      data_type: character varying
+    - name: role
+      description: Campo de tipo character varying para almacenar role.
+      data_type: character varying
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: character varying
+  - name: team_user
+    description: Asociación de usuarios a equipos de trabajo.
+    meta:
+      row_count: 109
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: role
+      description: Campo de tipo character varying para almacenar role.
+      data_type: character varying
+    - name: hourly_rate
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: team_workday_settings
+    description: Configuración de jornadas laborales por equipo (horarios, pausas).
+    meta:
+      row_count: 2
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: timezone
+      description: Campo de tipo text para almacenar timezone.
+      data_type: text
+    - name: workdays
+      description: Campo de tipo ARRAY para almacenar workdays.
+      data_type: ARRAY
+    - name: workday_start_time
+      description: Campo de tipo time without time zone para almacenar workday_start_time.
+      data_type: time without time zone
+    - name: workday_end_time
+      description: Campo de tipo time without time zone para almacenar workday_end_time.
+      data_type: time without time zone
+    - name: start_reminder_enabled
+      description: Campo de tipo boolean para almacenar start_reminder_enabled.
+      data_type: boolean
+    - name: end_reminder_enabled
+      description: Campo de tipo boolean para almacenar end_reminder_enabled.
+      data_type: boolean
+    - name: start_reminder_offset_minutes
+      description: Campo de tipo integer para almacenar start_reminder_offset_minutes.
+      data_type: integer
+    - name: end_reminder_offset_minutes
+      description: Campo de tipo integer para almacenar end_reminder_offset_minutes.
+      data_type: integer
+    - name: start_reminder_cutoff_time
+      description: Campo de tipo time without time zone para almacenar start_reminder_cutoff_time.
+      data_type: time without time zone
+    - name: end_reminder_cutoff_time
+      description: Campo de tipo time without time zone para almacenar end_reminder_cutoff_time.
+      data_type: time without time zone
+    - name: is_active
+      description: Indicador booleano que determina el estado de 'is_active'.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp with time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp with time zone
+    - name: end_reminder_trigger_mode
+      description: Campo de tipo text para almacenar end_reminder_trigger_mode.
+      data_type: text
+    - name: end_reminder_after_start_minutes
+      description: Campo de tipo integer para almacenar end_reminder_after_start_minutes.
+      data_type: integer
+    - name: workday_reminder_recipient_roles
+      description: Campo de tipo ARRAY para almacenar workday_reminder_recipient_roles.
+      data_type: ARRAY
+  - name: teams
+    description: Equipos, cuadrillas de trabajo y organizaciones.
+    meta:
+      row_count: 13
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: personal_team
+      description: Campo de tipo boolean para almacenar personal_team.
+      data_type: boolean
+    - name: legal_name
+      description: Campo de tipo character varying para almacenar legal_name.
+      data_type: character varying
+    - name: vat
+      description: Campo de tipo character varying para almacenar vat.
+      data_type: character varying
+    - name: domain
+      description: Campo de tipo character varying para almacenar domain.
+      data_type: character varying
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: plan_id
+      description: Clave foránea que referencia al identificador único de 'plan'.
+      data_type: bigint
+    - name: billing_email
+      description: Dirección de correo electrónico.
+      data_type: character varying
+    - name: billing_name
+      description: Campo de tipo character varying para almacenar billing_name.
+      data_type: character varying
+    - name: billing_address
+      description: Campo de tipo text para almacenar billing_address.
+      data_type: text
+    - name: billing_country
+      description: Campo de tipo character varying para almacenar billing_country.
+      data_type: character varying
+    - name: billing_state
+      description: Estado actual del flujo de trabajo.
+      data_type: character varying
+    - name: billing_city
+      description: Campo de tipo character varying para almacenar billing_city.
+      data_type: character varying
+    - name: billing_postal_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: currency
+      description: Campo de tipo character varying para almacenar currency.
+      data_type: character varying
+    - name: timezone
+      description: Campo de tipo character varying para almacenar timezone.
+      data_type: character varying
+    - name: contact_name
+      description: Campo de tipo character varying para almacenar contact_name.
+      data_type: character varying
+    - name: contact_email
+      description: Dirección de correo electrónico.
+      data_type: character varying
+    - name: contact_phone
+      description: Número de teléfono de contacto.
+      data_type: character varying
+    - name: workday_start
+      description: Campo de tipo time without time zone para almacenar workday_start.
+      data_type: time without time zone
+    - name: workday_end
+      description: Campo de tipo time without time zone para almacenar workday_end.
+      data_type: time without time zone
+    - name: week_starts_on
+      description: Campo de tipo integer para almacenar week_starts_on.
+      data_type: integer
+    - name: daily_summary_time
+      description: Campo de tipo time without time zone para almacenar daily_summary_time.
+      data_type: time without time zone
+    - name: working_days
+      description: Campo de tipo jsonb para almacenar working_days.
+      data_type: jsonb
+    - name: require_task_approval
+      description: Campo de tipo boolean para almacenar require_task_approval.
+      data_type: boolean
+    - name: allow_auto_schedule
+      description: Campo de tipo boolean para almacenar allow_auto_schedule.
+      data_type: boolean
+    - name: logo_url
+      description: Campo de tipo text para almacenar logo_url.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+    - name: daily_flow_projects_enabled
+      description: Campo de tipo boolean para almacenar daily_flow_projects_enabled.
+      data_type: boolean
+    - name: company_id
+      description: Clave foránea que referencia al identificador único de 'company'.
+      data_type: bigint
+    - name: report_language
+      description: Campo de tipo character varying para almacenar report_language.
+      data_type: character varying
+    - name: end_workday_agent_enabled
+      description: Campo de tipo boolean para almacenar end_workday_agent_enabled.
+      data_type: boolean
+    - name: end_workday_agent_roles
+      description: Campo de tipo ARRAY para almacenar end_workday_agent_roles.
+      data_type: ARRAY
+  - name: time_clock_corrections
+    description: Correcciones y solicitudes de ajuste de fichajes de jornada.
+    meta:
+      row_count: 68
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: record_id
+      description: Clave foránea que referencia al identificador único de 'record'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: person_id
+      description: Clave foránea que referencia al identificador único de 'person'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: previous_entry_at
+      description: Campo de tipo timestamp without time zone para almacenar previous_entry_at.
+      data_type: timestamp without time zone
+    - name: previous_exit_at
+      description: Campo de tipo timestamp without time zone para almacenar previous_exit_at.
+      data_type: timestamp without time zone
+    - name: new_entry_at
+      description: Campo de tipo timestamp without time zone para almacenar new_entry_at.
+      data_type: timestamp without time zone
+    - name: new_exit_at
+      description: Campo de tipo timestamp without time zone para almacenar new_exit_at.
+      data_type: timestamp without time zone
+    - name: reason
+      description: Campo de tipo text para almacenar reason.
+      data_type: text
+    - name: corrected_by_user_id
+      description: Clave foránea que referencia al identificador único de 'corrected_by_user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: corrected_at
+      description: Campo de tipo timestamp without time zone para almacenar corrected_at.
+      data_type: timestamp without time zone
+    - name: correction_source
+      description: Campo de tipo character varying para almacenar correction_source.
+      data_type: character varying
+  - name: time_clock_records
+    description: Registros de fichajes (inicio/fin de jornada y pausas).
+    meta:
+      row_count: 2060
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: person_id
+      description: Clave foránea que referencia al identificador único de 'person'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: work_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: entry_at
+      description: Campo de tipo timestamp without time zone para almacenar entry_at.
+      data_type: timestamp without time zone
+    - name: exit_at
+      description: Campo de tipo timestamp without time zone para almacenar exit_at.
+      data_type: timestamp without time zone
+    - name: entry_recorded_by_user_id
+      description: Clave foránea que referencia al identificador único de 'entry_recorded_by_user'.
+      data_type: bigint
+    - name: exit_recorded_by_user_id
+      description: Clave foránea que referencia al identificador único de 'exit_recorded_by_user'.
+      data_type: bigint
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: original_entry_at
+      description: Campo de tipo timestamp without time zone para almacenar original_entry_at.
+      data_type: timestamp without time zone
+    - name: original_exit_at
+      description: Campo de tipo timestamp without time zone para almacenar original_exit_at.
+      data_type: timestamp without time zone
+    - name: is_corrected
+      description: Indicador booleano que determina el estado de 'is_corrected'.
+      data_type: boolean
+  - name: user_notification_preferences
+    description: Preferencias individuales de notificación por usuario.
+    meta:
+      row_count: 12
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: notification_type_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: channel_code
+      description: Código de identificación estándar o alfanumérico.
+      data_type: character varying
+    - name: enabled
+      description: Campo de tipo boolean para almacenar enabled.
+      data_type: boolean
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: reminder_days_before
+      description: Campo de tipo integer para almacenar reminder_days_before.
+      data_type: integer
+  - name: users
+    description: Cuentas de usuario registradas en la plataforma.
+    meta:
+      row_count: 100
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: name
+      description: Nombre o título descriptivo.
+      data_type: character varying
+    - name: email
+      description: Dirección de correo electrónico.
+      data_type: character varying
+    - name: email_verified_at
+      description: Dirección de correo electrónico.
+      data_type: timestamp without time zone
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: character varying
+    - name: password
+      description: Campo de tipo character varying para almacenar password.
+      data_type: character varying
+    - name: remember_token
+      description: Campo de tipo character varying para almacenar remember_token.
+      data_type: character varying
+    - name: current_team_id
+      description: Clave foránea que referencia al identificador único de 'current_team'.
+      data_type: bigint
+    - name: profile_photo_path
+      description: Campo de tipo character varying para almacenar profile_photo_path.
+      data_type: character varying
+    - name: timezone
+      description: Campo de tipo character varying para almacenar timezone.
+      data_type: character varying
+    - name: language
+      description: Campo de tipo character varying para almacenar language.
+      data_type: character varying
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: deleted_at
+      description: Fecha y hora de borrado lógico (soft delete).
+      data_type: timestamp without time zone
+    - name: two_factor_secret
+      description: Campo de tipo text para almacenar two_factor_secret.
+      data_type: text
+    - name: two_factor_recovery_codes
+      description: Código de identificación estándar o alfanumérico.
+      data_type: text
+    - name: two_factor_confirmed_at
+      description: Campo de tipo timestamp without time zone para almacenar two_factor_confirmed_at.
+      data_type: timestamp without time zone
+    - name: is_admin
+      description: Indicador booleano que determina el estado de 'is_admin'.
+      data_type: boolean
+  - name: vehicle_accessories
+    description: Accesorios y equipamiento asignado a vehículos.
+    meta:
+      row_count: 2
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: vehicle_id
+      description: Clave foránea que referencia al identificador único de 'vehicle'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: accessory_id
+      description: Clave foránea que referencia al identificador único de 'accessory'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: quantity
+      description: Campo de tipo integer para almacenar quantity.
+      data_type: integer
+    - name: notes
+      description: Campo de tipo text para almacenar notes.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+  - name: vehicles
+    description: Flota de vehículos y maquinaria de transporte de la empresa.
+    meta:
+      row_count: 5
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: license_plate
+      description: Campo de tipo character varying para almacenar license_plate.
+      data_type: character varying
+    - name: brand
+      description: Campo de tipo character varying para almacenar brand.
+      data_type: character varying
+    - name: model
+      description: Campo de tipo character varying para almacenar model.
+      data_type: character varying
+    - name: daily_rate
+      description: Importe monetario o tarifa en euros (€).
+      data_type: numeric
+  - name: voice_inputs
+    description: Audios y mensajes de voz recibidos para procesamiento NLP.
+    meta:
+      row_count: 338
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: uuid
+      tests:
+      - not_null
+      - unique
+    - name: log_id
+      description: Clave foránea que referencia al identificador único de 'log'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: inbound_id
+      description: Clave foránea que referencia al identificador único de 'inbound'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+    - name: session_id
+      description: Clave foránea que referencia al identificador único de 'session'.
+      data_type: bigint
+    - name: task_id
+      description: Clave foránea que referencia al identificador único de 'task'.
+      data_type: bigint
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: text
+    - name: wa_media_id
+      description: Clave foránea que referencia al identificador único de 'wa_media'.
+      data_type: text
+    - name: media_mime
+      description: Campo de tipo text para almacenar media_mime.
+      data_type: text
+    - name: media_duration_ms
+      description: Duración o tiempo registrado en horas.
+      data_type: integer
+    - name: s3_bucket
+      description: Campo de tipo text para almacenar s3_bucket.
+      data_type: text
+    - name: s3_key_original
+      description: Campo de tipo text para almacenar s3_key_original.
+      data_type: text
+    - name: s3_key_normalized
+      description: Campo de tipo text para almacenar s3_key_normalized.
+      data_type: text
+    - name: transcript_text
+      description: Campo de tipo text para almacenar transcript_text.
+      data_type: text
+    - name: transcript_lang
+      description: Campo de tipo text para almacenar transcript_lang.
+      data_type: text
+    - name: transcript_status
+      description: Estado actual del flujo de trabajo.
+      data_type: text
+    - name: transcript_ts
+      description: Campo de tipo timestamp without time zone para almacenar transcript_ts.
+      data_type: timestamp without time zone
+    - name: last_error
+      description: Campo de tipo text para almacenar last_error.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp without time zone
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+    - name: dispatched_at
+      description: Campo de tipo timestamp with time zone para almacenar dispatched_at.
+      data_type: timestamp with time zone
+  - name: whatsapp_action_log
+    description: Log de auditoría de acciones e interacciones con el bot de WhatsApp.
+    meta:
+      row_count: 51775
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: process_name
+      description: Campo de tipo text para almacenar process_name.
+      data_type: text
+    - name: action_type
+      description: Campo de tipo text para almacenar action_type.
+      data_type: text
+    - name: direction
+      description: Campo de tipo text para almacenar direction.
+      data_type: text
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+    - name: session_id
+      description: Clave foránea que referencia al identificador único de 'session'.
+      data_type: bigint
+    - name: task_id
+      description: Clave foránea que referencia al identificador único de 'task'.
+      data_type: bigint
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: text
+    - name: wa_message_id
+      description: Clave foránea que referencia al identificador único de 'wa_message'.
+      data_type: text
+    - name: message_type
+      description: Campo de tipo text para almacenar message_type.
+      data_type: text
+    - name: button_id
+      description: Clave foránea que referencia al identificador único de 'button'.
+      data_type: text
+    - name: message_text
+      description: Campo de tipo text para almacenar message_text.
+      data_type: text
+    - name: payload
+      description: Campo de tipo json para almacenar payload.
+      data_type: json
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp without time zone
+  - name: whatsapp_comment_links
+    description: Vínculos entre comentarios de obra y mensajes de WhatsApp.
+    meta:
+      row_count: 61
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: comment_type
+      description: Campo de tipo text para almacenar comment_type.
+      data_type: text
+    - name: comment_id
+      description: Clave foránea que referencia al identificador único de 'comment'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: inbound_id
+      description: Clave foránea que referencia al identificador único de 'inbound'.
+      data_type: bigint
+    - name: wa_message_id
+      description: Clave foránea que referencia al identificador único de 'wa_message'.
+      data_type: text
+      tests:
+      - not_null
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: text
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+    - name: session_id
+      description: Clave foránea que referencia al identificador único de 'session'.
+      data_type: bigint
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp with time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp with time zone
+  - name: whatsapp_inbound_messages
+    description: Mensajes entrantes recibidos a través del webhook de WhatsApp.
+    meta:
+      row_count: 10821
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: wa_message_id
+      description: Clave foránea que referencia al identificador único de 'wa_message'.
+      data_type: text
+      tests:
+      - not_null
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: text
+    - name: message_type
+      description: Campo de tipo text para almacenar message_type.
+      data_type: text
+    - name: wa_media_id
+      description: Clave foránea que referencia al identificador único de 'wa_media'.
+      data_type: text
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: text
+    - name: attempts
+      description: Campo de tipo integer para almacenar attempts.
+      data_type: integer
+    - name: first_seen_at
+      description: Campo de tipo timestamp with time zone para almacenar first_seen_at.
+      data_type: timestamp with time zone
+    - name: last_seen_at
+      description: Campo de tipo timestamp with time zone para almacenar last_seen_at.
+      data_type: timestamp with time zone
+    - name: last_error
+      description: Campo de tipo text para almacenar last_error.
+      data_type: text
+    - name: last_log_id
+      description: Clave foránea que referencia al identificador único de 'last_log'.
+      data_type: bigint
+  - name: whatsapp_media_inputs
+    description: Archivos multimedia (imágenes, documentos, vídeos) recibidos vía
+      WhatsApp.
+    meta:
+      row_count: 268
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: uuid
+      tests:
+      - not_null
+      - unique
+    - name: inbound_id
+      description: Clave foránea que referencia al identificador único de 'inbound'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: log_id
+      description: Clave foránea que referencia al identificador único de 'log'.
+      data_type: bigint
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: session_id
+      description: Clave foránea que referencia al identificador único de 'session'.
+      data_type: bigint
+    - name: task_id
+      description: Clave foránea que referencia al identificador único de 'task'.
+      data_type: bigint
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: text
+    - name: wa_media_id
+      description: Clave foránea que referencia al identificador único de 'wa_media'.
+      data_type: text
+      tests:
+      - not_null
+    - name: media_kind
+      description: Campo de tipo text para almacenar media_kind.
+      data_type: text
+    - name: media_mime
+      description: Campo de tipo text para almacenar media_mime.
+      data_type: text
+    - name: caption
+      description: Campo de tipo text para almacenar caption.
+      data_type: text
+    - name: filename
+      description: Campo de tipo text para almacenar filename.
+      data_type: text
+    - name: s3_bucket
+      description: Campo de tipo text para almacenar s3_bucket.
+      data_type: text
+    - name: s3_key_original
+      description: Campo de tipo text para almacenar s3_key_original.
+      data_type: text
+    - name: file_size
+      description: Campo de tipo bigint para almacenar file_size.
+      data_type: bigint
+    - name: task_comment_id
+      description: Clave foránea que referencia al identificador único de 'task_comment'.
+      data_type: bigint
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: text
+    - name: last_error
+      description: Campo de tipo text para almacenar last_error.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp with time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp with time zone
+    - name: project_id
+      description: Clave foránea que referencia al identificador único de 'project'.
+      data_type: bigint
+    - name: project_comment_id
+      description: Clave foránea que referencia al identificador único de 'project_comment'.
+      data_type: bigint
+  - name: workday_reminder_log
+    description: Log de recordatorios automáticos de inicio/cierre de jornada laboral.
+    meta:
+      row_count: 904
+    columns:
+    - name: id
+      description: Identificador único clave primaria de la tabla.
+      data_type: bigint
+      tests:
+      - not_null
+      - unique
+    - name: team_id
+      description: Clave foránea que referencia al identificador único de 'team'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: person_id
+      description: Clave foránea que referencia al identificador único de 'person'.
+      data_type: bigint
+      tests:
+      - not_null
+    - name: user_id
+      description: Clave foránea que referencia al identificador único de 'user'.
+      data_type: bigint
+    - name: reminder_type
+      description: Campo de tipo text para almacenar reminder_type.
+      data_type: text
+    - name: reminder_date
+      description: Fecha asociada al evento o registro.
+      data_type: date
+    - name: status
+      description: Estado actual del flujo de trabajo.
+      data_type: text
+    - name: result_reason
+      description: Campo de tipo text para almacenar result_reason.
+      data_type: text
+    - name: phone
+      description: Número de teléfono de contacto.
+      data_type: text
+    - name: daily_session_id
+      description: Clave foránea que referencia al identificador único de 'daily_session'.
+      data_type: bigint
+    - name: template_name
+      description: Campo de tipo text para almacenar template_name.
+      data_type: text
+    - name: locked_by
+      description: Campo de tipo text para almacenar locked_by.
+      data_type: text
+    - name: locked_at
+      description: Campo de tipo timestamp with time zone para almacenar locked_at.
+      data_type: timestamp with time zone
+    - name: attempt_count
+      description: Campo de tipo integer para almacenar attempt_count.
+      data_type: integer
+    - name: last_attempt_at
+      description: Campo de tipo timestamp with time zone para almacenar last_attempt_at.
+      data_type: timestamp with time zone
+    - name: sent_at
+      description: Campo de tipo timestamp with time zone para almacenar sent_at.
+      data_type: timestamp with time zone
+    - name: failed_at
+      description: Campo de tipo timestamp with time zone para almacenar failed_at.
+      data_type: timestamp with time zone
+    - name: error_message
+      description: Campo de tipo text para almacenar error_message.
+      data_type: text
+    - name: created_at
+      description: Fecha y hora de creación del registro en la base de datos.
+      data_type: timestamp with time zone
+    - name: updated_at
+      description: Fecha y hora de última actualización del registro.
+      data_type: timestamp with time zone

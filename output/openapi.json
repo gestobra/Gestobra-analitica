@@ -1,0 +1,367 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GestObra BI API",
+    "description": "API REST para el módulo de Business Intelligence de GestObra. Proporciona datos analíticos y recursos operativos en tiempo real consultando la base de datos PostgreSQL de producción.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Servidor Local de Desarrollo"
+    }
+  ],
+  "paths": {
+    "/api/clients": {
+      "get": {
+        "summary": "Obtener lista de clientes",
+        "description": "Retorna un listado de nombres únicos de todos los clientes con obras registradas en el sistema.",
+        "responses": {
+          "200": {
+            "description": "Listado de clientes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "example": ["Ariadna Delvalle", "Esther Berríos Hijo", "Sin Cliente"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects": {
+      "get": {
+        "summary": "Obtener lista de proyectos / obras",
+        "description": "Retorna el listado de proyectos registrados. Permite filtrar opcionalmente por cliente utilizando parámetros de consulta.",
+        "parameters": [
+          {
+            "name": "client",
+            "in": "query",
+            "description": "Nombre del cliente para filtrar sus obras asignadas.",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Listado de proyectos / obras",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Project"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/people": {
+      "get": {
+        "summary": "Obtener lista de operarios y personal",
+        "description": "Retorna la lista de trabajadores, técnicos y operarios registrados en la base de datos.",
+        "responses": {
+          "200": {
+            "description": "Listado de personas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Person"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/aggregations/client": {
+      "get": {
+        "summary": "Métricas agregadas por Cliente",
+        "description": "Retorna el total de horas imputadas, costos de mano de obra y conteo de proyectos agrupados por cliente.",
+        "responses": {
+          "200": {
+            "description": "Métricas por cliente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "client_name": { "type": "string", "example": "Ariadna Delvalle" },
+                      "hours_imputed": { "type": "number", "example": 250.5 },
+                      "calculated_cost": { "type": "number", "example": 5010.00 },
+                      "projects_count": { "type": "integer", "example": 3 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/aggregations/person": {
+      "get": {
+        "summary": "Métricas agregadas por Persona / Operario",
+        "description": "Retorna el resumen de horas fichadas, horas imputadas a obras, costo de mano de obra y número de reportes en el bot de WhatsApp por cada trabajador.",
+        "responses": {
+          "200": {
+            "description": "Métricas de rendimiento por operario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "person_id": { "type": "integer", "example": 12 },
+                      "name": { "type": "string", "example": "Alejandro" },
+                      "cargo": { "type": "string", "example": "Oficial de 1ª" },
+                      "hours_clocked": { "type": "number", "example": 160.0 },
+                      "hours_imputed": { "type": "number", "example": 152.0 },
+                      "calculated_cost": { "type": "number", "example": 3040.00 },
+                      "bot_interactions": { "type": "integer", "example": 465 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/aggregations/project": {
+      "get": {
+        "summary": "Métricas agregadas por Obra / Proyecto",
+        "description": "Retorna el total acumulado de horas imputadas y costo de personal cargado por cada obra o proyecto activo.",
+        "responses": {
+          "200": {
+            "description": "Métricas acumuladas por obra",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "project_id": { "type": "integer", "example": 7 },
+                      "name": { "type": "string", "example": "Obra Mallorca" },
+                      "client_name": { "type": "string", "example": "Ariadna Delvalle" },
+                      "status": { "type": "string", "example": "En Progreso" },
+                      "hours_imputed": { "type": "number", "example": 230.5 },
+                      "calculated_cost": { "type": "number", "example": 4610.00 }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/data": {
+      "get": {
+        "summary": "Dashboard Monolítico Payload",
+        "description": "Retorna el consolidado de KPIs, series temporales, alertas y listados detallados necesarios para pintar el dashboard inicial aplicando filtros cruzados.",
+        "parameters": [
+          {
+            "name": "client",
+            "in": "query",
+            "description": "Filtra por cliente. Default: all.",
+            "required": false,
+            "schema": { "type": "string", "default": "all" }
+          },
+          {
+            "name": "project",
+            "in": "query",
+            "description": "Filtra por ID de obra. Default: all.",
+            "required": false,
+            "schema": { "type": "string", "default": "all" }
+          },
+          {
+            "name": "person",
+            "in": "query",
+            "description": "Filtra por nombre de operario. Default: all.",
+            "required": false,
+            "schema": { "type": "string", "default": "all" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estructura completa de datos para el dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardPayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/aggregations/conversations": {
+      "get": {
+        "summary": "Métricas en vivo de conversaciones y mensajería",
+        "description": "Retorna métricas agregadas en vivo sobre mensajes procesados (WhatsApp, Teléfono, Email), sesiones del bot y transcripciones de notas de voz.",
+        "responses": {
+          "200": {
+            "description": "Agregación de conversaciones",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_messages": { "type": "integer", "example": 2904 },
+                    "total_daily_sessions": { "type": "integer", "example": 2306 },
+                    "total_voice_transcripts": { "type": "integer", "example": 338 },
+                    "total_bot_actions": { "type": "integer", "example": 51768 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 7 },
+          "name": { "type": "string", "example": "Obra Mallorca" },
+          "client_name": { "type": "string", "example": "Ariadna Delvalle" },
+          "status": { "type": "string", "example": "En Progreso" },
+          "budget": { "type": "number", "example": 12000.00 },
+          "actual_cost": { "type": "number", "example": 9000.00 }
+        }
+      },
+      "Person": {
+        "type": "object",
+        "properties": {
+          "person_id": { "type": "integer", "example": 12 },
+          "name": { "type": "string", "example": "Alejandro" },
+          "cargo": { "type": "string", "example": "Oficial de 1ª" },
+          "role": { "type": "string", "example": "Operario" },
+          "hourly_rate": { "type": "number", "example": 20.00 }
+        }
+      },
+      "DashboardPayload": {
+        "type": "object",
+        "properties": {
+          "kpis": {
+            "type": "object",
+            "properties": {
+              "total_projects": { "type": "integer", "example": 262 },
+              "total_hours_clocked": { "type": "number", "example": 4609.0 },
+              "total_hours_imputed": { "type": "number", "example": 428.1 },
+              "total_labor_cost": { "type": "number", "example": 8926.61 },
+              "total_whatsapp_reports": { "type": "integer", "example": 1054 }
+            }
+          },
+          "project_chart": {
+            "type": "object",
+            "properties": {
+              "labels": { "type": "array", "items": { "type": "string" } },
+              "hours": { "type": "array", "items": { "type": "number" } },
+              "cost": { "type": "array", "items": { "type": "number" } },
+              "client": { "type": "array", "items": { "type": "string" } },
+              "id": { "type": "array", "items": { "type": "integer" } }
+            }
+          },
+          "person_chart": {
+            "type": "object",
+            "properties": {
+              "labels": { "type": "array", "items": { "type": "string" } },
+              "clocked": { "type": "array", "items": { "type": "number" } },
+              "imputed": { "type": "array", "items": { "type": "number" } }
+            }
+          },
+          "wa_chart": {
+            "type": "object",
+            "properties": {
+              "labels": { "type": "array", "items": { "type": "string" } },
+              "values": { "type": "array", "items": { "type": "integer" } }
+            }
+          },
+          "alerts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": { "type": "string" },
+                "person_name": { "type": "string" },
+                "hours_clocked": { "type": "number" },
+                "hours_imputed": { "type": "number" },
+                "difference": { "type": "number" }
+              }
+            }
+          },
+          "detailed_projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "integer" },
+                "name": { "type": "string" },
+                "client_name": { "type": "string" },
+                "status": { "type": "string" },
+                "budget": { "type": "number" },
+                "actual_cost": { "type": "number" },
+                "calculated_labor_cost": { "type": "number" },
+                "hours_imputed": { "type": "number" }
+              }
+            }
+          },
+          "operarios_summary": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "cargo": { "type": "string" },
+                "role": { "type": "string" },
+                "hours_clocked": { "type": "number" },
+                "hours_imputed": { "type": "number" },
+                "calculated_cost": { "type": "number" },
+                "whatsapp_messages": { "type": "integer" },
+                "whatsapp_voices": { "type": "integer" },
+                "whatsapp_media": { "type": "integer" }
+              }
+            }
+          },
+          "filters": {
+            "type": "object",
+            "properties": {
+              "clients": { "type": "array", "items": { "type": "string" } },
+              "projects": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": { "type": "integer" },
+                    "name": { "type": "string" },
+                    "client_name": { "type": "string" }
+                  }
+                }
+              },
+              "people": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    }
+  }
+}

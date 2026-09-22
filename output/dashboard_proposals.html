@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propuestas de Gráficos BI - GestObra</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow {
+            box-shadow: 0 0 50px -10px rgba(139, 92, 246, 0.15);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-slate-200 h-full flex flex-col bg-slate-950 selection:bg-purple-500 selection:text-white overflow-y-auto">
+    <!-- Background glows -->
+    <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+
+    <div class="max-w-[1600px] mx-auto w-full p-4 lg:p-8 flex-grow flex flex-col gap-6">
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-slate-800/60">
+            <div>
+                <div class="flex items-center gap-3">
+                    <span class="px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 font-outfit">Catálogo de Propuestas</span>
+                    <span class="text-xs text-slate-500 font-medium">30 Diseños Disponibles</span>
+                </div>
+                <h1 class="text-3xl lg:text-4xl font-extrabold font-outfit text-white tracking-tight mt-2">
+                    <span class="text-gradient">GestObra BI</span> Proposals Catalog
+                </h1>
+                <p class="text-slate-400 text-sm mt-1">Explora, interactúa y selecciona los gráficos que formarán parte de tu dashboard personalizado.</p>
+            </div>
+            <div class="glass px-5 py-3 rounded-2xl flex items-center gap-4 self-stretch sm:self-auto justify-between">
+                <div>
+                    <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Seleccionados</div>
+                    <div class="text-xl font-extrabold font-outfit text-purple-400"><span id="selected-count">0</span> / 30</div>
+                </div>
+                <button onclick="exportSelection()" class="bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all font-outfit">
+                    Copiar Lista Seleccionada
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Layout Split -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar Navigation -->
+            <aside class="w-full lg:w-64 shrink-0 flex flex-col gap-3">
+                <div class="text-xs font-bold text-slate-400 tracking-wider uppercase px-2">Categorías</div>
+                <button onclick="filterCategory('all')" id="cat-btn-all" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold transition-all glass bg-purple-500/10 text-purple-400 border border-purple-500/20 font-outfit">
+                    Todos los Gráficos (30)
+                </button>
+                <button onclick="filterCategory('presencia')" id="cat-btn-presencia" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 font-outfit">
+                    1. Control Horario (7)
+                </button>
+                <button onclick="filterCategory('obras')" id="cat-btn-obras" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 font-outfit">
+                    2. Productividad y Obras (8)
+                </button>
+                <button onclick="filterCategory('whatsapp')" id="cat-btn-whatsapp" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 font-outfit">
+                    3. Interacción WhatsApp (7)
+                </button>
+                <button onclick="filterCategory('recursos')" id="cat-btn-recursos" class="w-full text-left px-4 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-900/30 font-outfit">
+                    4. Recursos y Logística (8)
+                </button>
+            </aside>
+
+            <!-- Cards Catalog Grid -->
+            <div class="flex-grow flex flex-col gap-6" id="catalog-container">
+                <!-- Proposal Cards will be dynamically injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Script of Data & Layout -->
+    <script>
+        const chartProposals = [
+            // --- AREA 1: PRESENCIA ---
+            {
+                id: 1,
+                category: "presencia",
+                category_label: "Control Horario y Presencia",
+                title: "1. Histórico Mensual de Horas Fichadas",
+                type: "Gráfico de Líneas (Área)",
+                objective: "Analizar la tendencia temporal del volumen total de horas laboradas por mes.",
+                metrics: "Eje X: Mes/Año. Eje Y: Suma de hours_worked en marcas de fichajes.",
+                chartType: "line",
+                chartData: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [{
+                        label: 'Horas Fichadas',
+                        data: [3200, 3450, 3620, 3490, 3780, 4200, 3950, 2800, 3910, 4120, 4350, 4520],
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        backgroundColor: 'rgba(139, 92, 246, 0.15)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                }
+            },
+            {
+                id: 2,
+                category: "presencia",
+                category_label: "Control Horario y Presencia",
+                title: "2. Distribución de Jornadas por X",
+                type: "Gráfico de Pastel (Pie)",
+                objective: "Identificar qué acumulan más horas en el mes actual. Permite escoger entre Operarios, Especialidades o Proyectos.",
+                metrics: "Eje X: Suma de hours_worked. Eje Y: person_name, specialty_name o project_name.",
+                chartType: "pie_toggleable", // Custom interactive doughnut
+                chartData: {
+                    operarios: {
+                        labels: ['Alejandro', 'Andres', 'Bernat', 'Miquel', 'Joan'],
+                        values: [160, 155, 142, 130, 110]
+                    },
+                    especialidades: {
+                        labels: ['Albañilería', 'Pintores', 'Fontaneros', 'Electricistas', 'Maquinistas'],
+                        values: [320, 210, 180, 150, 90]
+                    },
+                    proyectos: {
+                        labels: ['Obra Mallorca', 'Reforma Ibiza', 'Promoción Palma', 'Villa Calvià'],
+                        values: [450, 280, 210, 190]
+                    }
+                }
+            },
+            {
+                id: 3,
+                category: "presencia",
+                category_label: "Control Horario y Presencia",
+                title: "3. Fichajes sin Salida Registrada",
+                type: "Tarjeta de KPI + Alertas",
+                objective: "Mostrar en tiempo real cuántos registros de entrada carecen de hora de salida registrada.",
+                metrics: "Conteo de filas de time_clock_records donde exit_at es nulo.",
+                chartType: "html_kpi",
+                htmlContent: `
+                    <div class="flex flex-col gap-3 h-full justify-center">
+                        <div class="flex items-center gap-3 bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
+                            <span class="text-4xl font-extrabold text-red-500 font-outfit">8</span>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Fichajes Activos / Sin Salida</h4>
+                                <p class="text-xs text-slate-400">Operarios actualmente marcados como trabajando.</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-400 space-y-1.5 px-2">
+                            <div class="flex justify-between border-b border-slate-800/40 pb-1"><span>Alejandro (08:00 AM)</span> <span class="text-red-400">Activo</span></div>
+                            <div class="flex justify-between border-b border-slate-800/40 pb-1"><span>Miquel (08:30 AM)</span> <span class="text-red-400">Activo</span></div>
+                            <div class="flex justify-between"><span>Joan (09:00 AM)</span> <span class="text-red-400">Activo</span></div>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                id: 4,
+                category: "presencia",
+                category_label: "Control Horario y Presencia",
+                title: "4. Puntualidad e Inicio de Jornada",
+                type: "Gráfico de Dispersión (Scatter)",
+                objective: "Evaluar la desviación de la hora de entrada real respecto al inicio oficial del turno de trabajo.",
+                metrics: "Eje X: Fecha del día. Eje Y: Minutos de retraso (Desviación real vs oficial).",
+                chartType: "scatter",
+                chartData: {
+                    datasets: [{
+                        label: 'Retraso de entradas (Minutos)',
+                        data: [
+                            {x: 1, y: 5}, {x: 2, y: 12}, {x: 3, y: 0}, {x: 4, y: 2}, {x: 5, y: -4},
+                            {x: 8, y: 15}, {x: 9, y: 8}, {x: 10, y: 0}, {x: 11, y: -2}, {x: 12, y: 20},
+                            {x: 15, y: 3}, {x: 16, y: 1}, {x: 17, y: 0}, {x: 18, y: -5}, {x: 19, y: 10}
+                        ],
+                        backgroundColor: 'rgba(236, 72, 153, 0.75)',
+                        borderColor: 'rgba(236, 72, 153, 1)',
+                        borderWidth: 1
+                    }]
+                }
+            },
+            {
+                id: 5,
+                category: "presencia",
+                category_label: "Control Horario y Presencia",
+                title: "5. Tasa de Fichajes Corregidos Manualmente",
+                type: "Gráfico de Torta (Dona)",
+                objective: "Controlar el volumen de incidencias y correcciones de fichajes hechas por administradores.",
+                metrics: "Fichajes directos en reloj vs Fichajes modificados en time_clock_corrections.",
+                chartType: "doughnut",
+                chartData: {
+                    labels: ['Fichajes Directos', 'Fichajes Corregidos'],
+                    datasets: [{
+                        data: [762, 46],
+                        backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(245, 158, 11, 0.7)'],
+                        borderColor: 'rgba(15, 23, 42, 0.9)',
+                        borderWidth: 2
+                    }]
+                }
+            },
+            {
+                id: 6,
+                category: "presencia",
+                category_label: "Control Horario y Presencia",
+                title: "6. Ausentismo y Motivos de Baja",
+                type: "Gráfico de Pastel (Pie)",
+                objective: "Visualizar y clasificar los días no laborados según la causa declarada por el personal.",
+                metrics: "Agrupado por reason de person_absences. Métrica: Conteo de días acumulados.",
+                chartType: "doughnut",
+                chartData: {
+                    labels: ['Enfermedad', 'Vacaciones', 'Asuntos Propios', 'Maternidad/Paternidad'],
+                    datasets: [{
+                        data: [12, 45, 8, 15],
+                        backgroundColor: ['rgba(239, 68, 68, 0.7)', 'rgba(16, 185, 129, 0.7)', 'rgba(245, 158, 11, 0.7)', 'rgba(59, 130, 246, 0.7)'],
+                        borderColor: 'rgba(15, 23, 42, 0.9)',
+                        borderWidth: 2
+                    }]
+                }
+            },
+            {
+                id: 7,
+                category: "presencia",
+                category_label: "Control Horario y Presencia",
+                title: "7. Mapa de Calor de Fichajes",
+                type: "Matriz CSS (Heatmap)",
+                objective: "Conocer los momentos y horas clave en que los operarios realizan sus marcas de fichaje.",
+                metrics: "Eje X: Días de la semana. Eje Y: Horas de entrada/salida comunes. Tono: Concentración.",
+                chartType: "html_heatmap",
+                htmlContent: `
+                    <div class="flex flex-col gap-2 h-full justify-center">
+                        <div class="text-xs text-slate-400 font-semibold mb-2">Fichajes por Día y Hora:</div>
+                        <div class="grid grid-cols-8 gap-1 text-[10px] font-mono">
+                            <div>Hora</div><div>L</div><div>M</div><div>M</div><div>J</div><div>V</div><div>S</div><div>D</div>
+                            
+                            <div>07:00</div><div class="bg-purple-900/20 rounded p-0.5 text-center"></div><div class="bg-purple-900/30 rounded p-0.5 text-center"></div><div class="bg-purple-900/20 rounded p-0.5 text-center"></div><div class="bg-purple-900/30 rounded p-0.5 text-center"></div><div class="bg-purple-900/20 rounded p-0.5 text-center"></div><div class="bg-slate-900 rounded p-0.5 text-center"></div><div class="bg-slate-900 rounded p-0.5 text-center"></div>
+                            <div>08:00</div><div class="bg-purple-500 rounded p-0.5 text-center font-bold text-white">42</div><div class="bg-purple-500 rounded p-0.5 text-center font-bold text-white">45</div><div class="bg-purple-500 rounded p-0.5 text-center font-bold text-white">40</div><div class="bg-purple-500 rounded p-0.5 text-center font-bold text-white">48</div><div class="bg-purple-600 rounded p-0.5 text-center text-slate-200">35</div><div class="bg-purple-900/30 rounded p-0.5 text-center"></div><div class="bg-slate-900 rounded p-0.5 text-center"></div>
+                            <div>13:00</div><div class="bg-purple-900/50 rounded p-0.5 text-center">15</div><div class="bg-purple-900/40 rounded p-0.5 text-center">12</div><div class="bg-purple-900/50 rounded p-0.5 text-center">18</div><div class="bg-purple-900/40 rounded p-0.5 text-center">14</div><div class="bg-purple-900/50 rounded p-0.5 text-center">15</div><div class="bg-slate-900 rounded p-0.5 text-center"></div><div class="bg-slate-900 rounded p-0.5 text-center"></div>
+                            <div>17:00</div><div class="bg-purple-600 rounded p-0.5 text-center text-slate-200">38</div><div class="bg-purple-600 rounded p-0.5 text-center text-slate-200">39</div><div class="bg-purple-500 rounded p-0.5 text-center font-bold text-white">44</div><div class="bg-purple-600 rounded p-0.5 text-center text-slate-200">37</div><div class="bg-purple-700 rounded p-0.5 text-center text-slate-300">22</div><div class="bg-slate-900 rounded p-0.5 text-center"></div><div class="bg-slate-900 rounded p-0.5 text-center"></div>
+                        </div>
+                    </div>
+                `
+            },
+
+            // --- AREA 2: OBRAS ---
+            {
+                id: 8,
+                category: "obras",
+                category_label: "Productividad y Obras",
+                title: "8. Avance Físico de Obra vs Costo Acumulado",
+                type: "Línea + Barras (Eje Y Doble)",
+                objective: "Comparar el progreso estimado del proyecto frente al devengo de costo de mano de obra.",
+                metrics: "Eje X: Tiempo. Eje Y1: % de tareas completadas. Eje Y2: Costo acumulado en imputaciones.",
+                chartType: "combo_line_bar",
+                chartData: {
+                    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'],
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: 'Progreso Real (%)',
+                            data: [10, 25, 40, 55, 75, 95],
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2,
+                            fill: false,
+                            yAxisID: 'y'
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Costo Acumulado (€)',
+                            data: [1200, 2500, 4800, 6200, 7500, 8900],
+                            backgroundColor: 'rgba(236, 72, 153, 0.45)',
+                            borderColor: 'rgba(236, 72, 153, 1)',
+                            borderWidth: 1.5,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 9,
+                category: "obras",
+                category_label: "Productividad y Obras",
+                title: "9. Presupuesto de Mano de Obra vs Costo Real",
+                type: "Gráfico de Barras Agrupadas",
+                objective: "Monitorear desviaciones de presupuesto de personal y operarios en cada proyecto.",
+                metrics: "Eje X: Obras. Eje Y: budget vs actual_cost acumulado por imputaciones.",
+                chartType: "bar_grouped",
+                chartData: {
+                    labels: ['Obra Mallorca', 'Reforma Ibiza', 'Villa Calvià', 'Palma Centro'],
+                    datasets: [
+                        {
+                            label: 'Presupuesto M.O.',
+                            data: [12000, 8000, 15000, 5000],
+                            backgroundColor: 'rgba(99, 102, 241, 0.65)',
+                            borderColor: 'rgba(99, 102, 241, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Costo Real M.O.',
+                            data: [8926, 9200, 13400, 4800],
+                            backgroundColor: 'rgba(16, 185, 129, 0.65)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                }
+            },
+            {
+                id: 10,
+                category: "obras",
+                category_label: "Productividad y Obras",
+                title: "10. Costo de Obra por Categoría Profesional",
+                type: "Gráfico de Pastel (Pie)",
+                objective: "Analizar el peso de cada perfil laboral (Peón, Oficial, Encargado) en los costos totales.",
+                metrics: "Suma de calculated_cost agrupado por cargo_name del operario.",
+                chartType: "pie",
+                chartData: {
+                    labels: ['Peón', 'Oficial de 1ª', 'Encargado de Obra', 'Jefe de Obra', 'Oficial de 2ª'],
+                    datasets: [{
+                        data: [4200, 2800, 1100, 800, 1500],
+                        backgroundColor: [
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(236, 72, 153, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(245, 158, 11, 0.7)'
+                        ],
+                        borderColor: 'rgba(15, 23, 42, 0.9)',
+                        borderWidth: 2
+                    }]
+                }
+            },
+            {
+                id: 11,
+                category: "obras",
+                category_label: "Productividad y Obras",
+                title: "11. Pareto de Horas por Proyecto",
+                type: "Gráfico de Pareto (Mixto)",
+                objective: "Identificar qué proyectos concentran el 80% de los esfuerzos en horas acumuladas.",
+                metrics: "Eje X: Proyectos (desc). Eje Y1: Horas de imputaciones. Eje Y2: Porcentaje acumulado.",
+                chartType: "pareto",
+                chartData: {
+                    labels: ['Obra Mallorca', 'Reforma Ibiza', 'Villa Calvià', 'Palma Centro'],
+                    hours: [230, 120, 60, 18],
+                    pct: [53.7, 81.7, 95.8, 100.0]
+                }
+            },
+            {
+                id: 12,
+                category: "obras",
+                category_label: "Productividad y Obras",
+                title: "12. Eficiencia de Cierre de Tareas (Lead Time)",
+                type: "Gráfico de Barras",
+                objective: "Analizar el promedio de días necesarios para completar las actividades planificadas por especialidad.",
+                metrics: "Promedio de días calculados como completed_at - started_at agrupado por especialidad.",
+                chartType: "bar",
+                chartData: {
+                    labels: ['Estructuras', 'Albañilería', 'Electricidad', 'Fontanería', 'Pinturas'],
+                    datasets: [{
+                        label: 'Días Promedio de Ejecución',
+                        data: [12.4, 8.2, 3.1, 4.5, 2.8],
+                        backgroundColor: 'rgba(59, 130, 246, 0.65)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }]
+                }
+            },
+            {
+                id: 13,
+                category: "obras",
+                category_label: "Productividad y Obras",
+                title: "13. Tasa de Aprobación de Tareas",
+                type: "Medidor (Gauge)",
+                objective: "Representar el avance y aprobación por parte de los encargados respecto a las tareas finalizadas.",
+                metrics: "Tareas aprobadas / total tareas marcadas como completadas.",
+                chartType: "gauge",
+                chartData: {
+                    value: 84, // 84% approval rate
+                    labels: ['Aprobado', 'Pendiente'],
+                    datasets: [{
+                        data: [84, 16],
+                        backgroundColor: ['rgba(16, 185, 129, 0.75)', 'rgba(30, 41, 59, 0.8)'],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                }
+            },
+            {
+                id: 14,
+                category: "obras",
+                category_label: "Productividad y Obras",
+                title: "14. Relación Horas Fichadas vs Imputadas",
+                type: "Gráfico de Dispersión (Scatter)",
+                objective: "Evaluar la fidelidad de los registros analizando qué operarios justifican sus horas trabajadas en obras.",
+                metrics: "Punto por operario. Eje X: Horas fichadas. Eje Y: Horas imputadas.",
+                chartType: "scatter",
+                chartData: {
+                    datasets: [{
+                        label: 'Operarios (Horas Totales)',
+                        data: [
+                            {x: 120, y: 110}, {x: 135, y: 130}, {x: 80, y: 78}, {x: 160, y: 25},
+                            {x: 155, y: 152}, {x: 142, y: 40}, {x: 95, y: 90}, {x: 110, y: 108},
+                            {x: 70, y: 10}, {x: 85, y: 80}, {x: 100, y: 95}, {x: 112, y: 35}
+                        ],
+                        backgroundColor: 'rgba(139, 92, 246, 0.75)',
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        borderWidth: 1
+                    }]
+                }
+            },
+            {
+                id: 15,
+                category: "obras",
+                category_label: "Productividad y Obras",
+                title: "15. Control de Hitos de Obra",
+                type: "Gantt Timeline HTML",
+                objective: "Visualizar el estado actual y desvíos de los hitos clave agendados por obra.",
+                metrics: "Visualiza fechas de inicio y fin y estado de milestones por proyecto.",
+                chartType: "html_timeline",
+                htmlContent: `
+                    <div class="flex flex-col gap-3 h-full justify-center text-xs font-outfit">
+                        <div>
+                            <div class="flex justify-between font-bold text-white mb-1"><span>1. Cimentación - Obra Mallorca</span> <span class="text-emerald-400">Completado</span></div>
+                            <div class="w-full bg-slate-800 rounded-full h-2"><div class="bg-emerald-500 h-2 rounded-full" style="width: 100%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between font-bold text-white mb-1"><span>2. Estructura y Pilares</span> <span class="text-blue-400">En Progreso (80%)</span></div>
+                            <div class="w-full bg-slate-800 rounded-full h-2"><div class="bg-blue-500 h-2 rounded-full" style="width: 80%"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between font-bold text-white mb-1"><span>3. Cerramientos y Cubierta</span> <span class="text-amber-400">Retrasado (15%)</span></div>
+                            <div class="w-full bg-slate-800 rounded-full h-2"><div class="bg-amber-500 h-2 rounded-full" style="width: 15%"></div></div>
+                        </div>
+                    </div>
+                `
+            },
+
+            // --- AREA 3: WHATSAPP ---
+            {
+                id: 16,
+                category: "whatsapp",
+                category_label: "Eficiencia de Canales de Reporte (WhatsApp)",
+                title: "16. Volumen Diario de Mensajes al Bot",
+                type: "Gráfico de Área Apilada",
+                objective: "Medir el uso diario del bot de WhatsApp por los operarios para registrar actividad.",
+                metrics: "Eje X: Fecha. Eje Y: Cantidad de mensajes de whatsapp_action_log.",
+                chartType: "line",
+                chartData: {
+                    labels: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab', 'Dom'],
+                    datasets: [{
+                        label: 'Interacciones del Bot',
+                        data: [420, 510, 480, 530, 490, 120, 45],
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                }
+            },
+            {
+                id: 17,
+                category: "whatsapp",
+                category_label: "Eficiencia de Canales de Reporte (WhatsApp)",
+                title: "17. Tipo de Reporte de Campo (WhatsApp)",
+                type: "Gráfico de Dona (Doughnut)",
+                objective: "Visualizar los medios predilectos para reportar la actividad en el frente de obra.",
+                metrics: "Conteo agrupado por media_kind en whatsapp_media_inputs.",
+                chartType: "doughnut",
+                chartData: {
+                    labels: ['Mensajes de Texto', 'Partes de Voz', 'Fotos de Obra', 'Planos/PDFs'],
+                    datasets: [{
+                        data: [27430, 292, 45, 8],
+                        backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(139, 92, 246, 0.7)', 'rgba(236, 72, 153, 0.7)', 'rgba(245, 158, 11, 0.7)'],
+                        borderColor: 'rgba(15, 23, 42, 0.9)',
+                        borderWidth: 2
+                    }]
+                }
+            },
+            {
+                id: 18,
+                category: "whatsapp",
+                category_label: "Eficiencia de Canales de Reporte (WhatsApp)",
+                title: "18. Duración Media de Partes de Voz",
+                type: "Gráfico de Barras (Histograma)",
+                objective: "Conocer el tiempo promedio de grabación de audios para optimizar el análisis de transcripción.",
+                metrics: "Eje X: Rango de segundos. Eje Y: Cantidad de audios en voice_inputs.",
+                chartType: "bar",
+                chartData: {
+                    labels: ['1-5s', '6-15s', '16-30s', '31-60s', '>60s'],
+                    datasets: [{
+                        label: 'Audios Recibidos',
+                        data: [45, 120, 85, 32, 10],
+                        backgroundColor: 'rgba(236, 72, 153, 0.65)',
+                        borderColor: 'rgba(236, 72, 153, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }]
+                }
+            },
+            {
+                id: 19,
+                category: "whatsapp",
+                category_label: "Eficiencia de Canales de Reporte (WhatsApp)",
+                title: "19. Tasa de Transcripciones Exitosas",
+                type: "Gráfico de Barras Apiladas",
+                objective: "Monitorear la precisión de la transcripción automática de IA sobre los audios capturados.",
+                metrics: "Eje X: Fecha. Eje Y: Cantidad de audios agrupados por transcript_status.",
+                chartType: "bar_stacked",
+                chartData: {
+                    labels: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                    datasets: [
+                        {
+                            label: 'Éxito (Transcrito)',
+                            data: [35, 42, 38, 40, 37, 8],
+                            backgroundColor: 'rgba(16, 185, 129, 0.75)'
+                        },
+                        {
+                            label: 'Fallo (Ruido/Error)',
+                            data: [3, 2, 4, 1, 3, 0],
+                            backgroundColor: 'rgba(239, 68, 68, 0.75)'
+                        }
+                    ]
+                }
+            },
+            {
+                id: 20,
+                category: "whatsapp",
+                category_label: "Eficiencia de Canales de Reporte (WhatsApp)",
+                title: "20. Errores del Webhook del Bot",
+                type: "Gráfico de Líneas de Alerta",
+                objective: "Controlar fallos técnicos e incidencias de entrega de mensajes del bot.",
+                metrics: "Eje X: Fecha del día. Eje Y: Suma de errores registrados en whatsapp_inbound_messages.",
+                chartType: "line",
+                chartData: {
+                    labels: ['15 Jul', '16 Jul', '17 Jul', '18 Jul', '19 Jul', '20 Jul', '21 Jul'],
+                    datasets: [{
+                        label: 'Errores Registrados',
+                        data: [2, 0, 5, 12, 1, 0, 3],
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.1
+                    }]
+                }
+            },
+            {
+                id: 21,
+                category: "whatsapp",
+                category_label: "Eficiencia de Canales de Reporte (WhatsApp)",
+                title: "21. Ranking de Operarios por Uso del Bot",
+                type: "Gráfico de Barras Horizontales",
+                objective: "Evaluar la implicación del personal y uso de la herramienta de reporte móvil.",
+                metrics: "Eje X: Suma de mensajes/audios. Eje Y: Nombre del trabajador.",
+                chartType: "bar_horizontal",
+                chartData: {
+                    labels: ['Alejandro', 'Andres', 'Miquel', 'Joan', 'Bernat'],
+                    values: [450, 380, 210, 190, 85]
+                }
+            },
+            {
+                id: 22,
+                category: "whatsapp",
+                category_label: "Eficiencia de Canales de Reporte (WhatsApp)",
+                title: "22. Fotos e Imágenes por Proyecto",
+                type: "Gráfico de Barras",
+                objective: "Monitorear la carga documental visual y de avances enviada por obra.",
+                metrics: "Eje X: Proyectos. Eje Y: Cantidad de imágenes adjuntadas.",
+                chartType: "bar",
+                chartData: {
+                    labels: ['Obra Mallorca', 'Reforma Ibiza', 'Villa Calvià', 'Palma Centro'],
+                    datasets: [{
+                        label: 'Fotos de Avance',
+                        data: [24, 15, 10, 4],
+                        backgroundColor: 'rgba(139, 92, 246, 0.65)',
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }]
+                }
+            },
+
+            // --- AREA 4: RECURSOS ---
+            {
+                id: 23,
+                category: "recursos",
+                category_label: "Recursos, Materiales y Logística",
+                title: "23. Tasa de Uso de Vehículos",
+                type: "Gráfico de Barras Horizontales",
+                objective: "Medir el porcentaje de días de uso real sobre los vehículos disponibles.",
+                metrics: "Días con imputación de kilometraje/uso vs total días hábiles de la flota.",
+                chartType: "bar_horizontal_pct",
+                chartData: {
+                    labels: ['Furgoneta A (IB-1020)', 'Camión Ligero B (IB-4521)', 'Turismo C (IB-8822)'],
+                    values: [92, 65, 40]
+                }
+            },
+            {
+                id: 24,
+                category: "recursos",
+                category_label: "Recursos, Materiales y Logística",
+                title: "24. Costo Diario Acumulado de Flota",
+                type: "Gráfico de Área Apilada",
+                objective: "Analizar el gasto acumulado derivado de los vehículos activos imputados a obras.",
+                metrics: "Eje X: Fecha del día. Eje Y: Suma acumulada de daily_rate de vehículos asignados.",
+                chartType: "line",
+                chartData: {
+                    labels: ['Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                    datasets: [{
+                        label: 'Gasto Flota (€)',
+                        data: [150, 300, 450, 600, 750, 850],
+                        borderColor: 'rgba(245, 158, 11, 1)',
+                        backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1
+                    }]
+                }
+            },
+            {
+                id: 25,
+                category: "recursos",
+                category_label: "Recursos, Materiales y Logística",
+                title: "25. Herramientas Asignadas sin Devolución",
+                type: "Tabla de Inventario BI",
+                objective: "Listar herramientas críticas o maquinaria que no han sido devueltas al almacén.",
+                metrics: "Listado de tools activas y su último operario asignado en tareas.",
+                chartType: "html_inventory",
+                htmlContent: `
+                    <div class="flex flex-col gap-2 h-full justify-center text-xs font-outfit">
+                        <table class="w-full text-left text-slate-300">
+                            <thead>
+                                <tr class="text-slate-500 uppercase text-[10px] border-b border-slate-800">
+                                    <th class="pb-1">Herramienta</th>
+                                    <th class="pb-1">Operario</th>
+                                    <th class="pb-1 text-right">Días</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-slate-800/30"><td class="py-1.5 text-white font-semibold">Rotomartillo Bosch</td><td>Alejandro</td><td class="text-right text-amber-400">12 d</td></tr>
+                                <tr class="border-b border-slate-800/30"><td class="py-1.5 text-white font-semibold">Generador Honda 5kW</td><td>Andres</td><td class="text-right text-red-400">22 d</td></tr>
+                                <tr><td class="py-1.5 text-white font-semibold">Nivel Láser Hilti</td><td>Joan</td><td class="text-right text-slate-400">3 d</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `
+            },
+            {
+                id: 26,
+                category: "recursos",
+                category_label: "Recursos, Materiales y Logística",
+                title: "26. Consumo de Accesorios por Proyecto",
+                type: "Gráfico de Torta (Pie)",
+                objective: "Identificar los materiales y consumibles más cargados a cada frente de obra.",
+                metrics: "Suma de quantity agrupado por accesorios de vehicle_accessories.",
+                chartType: "pie",
+                chartData: {
+                    labels: ['Discos de Corte', 'Tornillería Acero', 'Brocas Hormigón', 'Guantes de Nitrilo', 'Pintura Imprimación'],
+                    datasets: [{
+                        data: [150, 450, 80, 200, 60],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(139, 92, 246, 0.7)'
+                        ],
+                        borderColor: 'rgba(15, 23, 42, 0.9)',
+                        borderWidth: 2
+                    }]
+                }
+            },
+            {
+                id: 27,
+                category: "recursos",
+                category_label: "Recursos, Materiales y Logística",
+                title: "27. Uso de Maquinaria y Recursos Críticos",
+                type: "Gráfico de Radar",
+                objective: "Evaluar en qué especialidades u obras se destina el tiempo de uso de la maquinaria pesada.",
+                metrics: "Horas imputadas por recurso tipo máquina en las tareas de obra.",
+                chartType: "radar",
+                chartData: {
+                    labels: ['Excavaciones', 'Cimentación', 'Estructuras', 'Zanjas/Canales', 'Desescombros'],
+                    datasets: [
+                        {
+                            label: 'Excavadora Cat 320',
+                            data: [85, 90, 10, 45, 30],
+                            backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                            borderColor: 'rgba(245, 158, 11, 1)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Dúmper Ausa 150',
+                            data: [40, 25, 75, 15, 95],
+                            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 2
+                        }
+                    ]
+                }
+            },
+            {
+                id: 28,
+                category: "recursos",
+                category_label: "Recursos, Materiales y Logística",
+                title: "28. Capacidad Operativa vs Asignación",
+                type: "Comparativo de Área",
+                objective: "Visualizar la saturación del personal comparando el tiempo total disponible vs el agendado en obra.",
+                metrics: "Capacidad teórica diaria vs Minutos agendados en tareas de calendarización.",
+                chartType: "line",
+                chartData: {
+                    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6'],
+                    datasets: [
+                        {
+                            label: 'Minutos Disponibles',
+                            data: [24000, 24000, 24000, 24000, 24000, 24000],
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                            borderWidth: 2,
+                            fill: true
+                        },
+                        {
+                            label: 'Minutos Asignados',
+                            data: [18500, 21200, 23800, 25600, 22000, 19000],
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                            borderWidth: 2,
+                            fill: true
+                        }
+                    ]
+                }
+            },
+            {
+                id: 29,
+                category: "recursos",
+                category_label: "Recursos, Materiales y Logística",
+                title: "29. Especialidades más Requeridas en Tareas",
+                type: "Gráfico de Barras",
+                objective: "Identificar los perfiles técnicos más demandados para ajustar el plan de contratación o subcontratas.",
+                metrics: "Frecuencia de especialidades agendadas en la planificación de tareas de obra.",
+                chartType: "bar",
+                chartData: {
+                    labels: ['Encofradores', 'Ferrallistas', 'Soldadores', 'Electricistas', 'Fontaneros'],
+                    datasets: [{
+                        label: 'Tareas Agendadas',
+                        data: [142, 115, 90, 75, 45],
+                        backgroundColor: 'rgba(139, 92, 246, 0.65)',
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }]
+                }
+            },
+            {
+                id: 30,
+                category: "recursos",
+                category_label: "Recursos, Materiales y Logística",
+                title: "30. Tareas Críticas Retrasadas por Obra",
+                type: "Tarjeta KPI + Tabla Operativa",
+                objective: "Alertar al equipo de gestión sobre cuellos de botella en tareas prioritarias que superaron el plazo estimado.",
+                metrics: "Conteo de tareas con prioridad CRITICAL y completed_at nulo o excedido.",
+                chartType: "html_critical",
+                htmlContent: `
+                    <div class="flex flex-col gap-3 h-full justify-center">
+                        <div class="flex items-center gap-3 bg-rose-500/10 border border-rose-500/20 rounded-2xl p-4">
+                            <span class="text-4xl font-extrabold text-rose-500 font-outfit">4</span>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Bloqueos Críticos Activos</h4>
+                                <p class="text-xs text-slate-400">Tareas críticas superando la duración estimada.</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-400 space-y-1.5 px-2">
+                            <div class="flex justify-between border-b border-slate-800/40 pb-1"><span>Hormigonado de Forjado</span> <span class="text-rose-400">+5 días</span></div>
+                            <div class="flex justify-between border-b border-slate-800/40 pb-1"><span>Instalación Eléctrica Baja T.</span> <span class="text-rose-400">+3 días</span></div>
+                            <div class="flex justify-between"><span>Acometida de Saneamientos</span> <span class="text-rose-400">+1 día</span></div>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        let selectedCharts = new Set();
+        let chartInstances = {};
+
+        // Category Filter
+        function filterCategory(catId) {
+            const container = document.getElementById('catalog-container');
+            const cards = container.querySelectorAll('.proposal-card');
+            
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (catId === 'all' || cardCat === catId) {
+                    card.classList.remove('hidden');
+                    card.classList.add('flex');
+                } else {
+                    card.classList.add('hidden');
+                    card.classList.remove('flex');
+                }
+            });
+
+            // Highlight active sidebar item
+            const categories = ['all', 'presencia', 'obras', 'whatsapp', 'recursos'];
+            categories.forEach(c => {
+                const btn = document.getElementById('cat-btn-' + c);
+                btn.classList.remove('bg-purple-500/10', 'text-purple-400', 'border', 'border-purple-500/20');
+                btn.classList.add('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-900/30');
+            });
+
+            const activeBtn = document.getElementById('cat-btn-' + catId);
+            activeBtn.classList.remove('text-slate-400', 'hover:text-slate-200', 'hover:bg-slate-900/30');
+            activeBtn.classList.add('bg-purple-500/10', 'text-purple-400', 'border', 'border-purple-500/20');
+        }
+
+        // Selection / Checklist
+        function toggleSelection(id) {
+            const card = document.getElementById('card-' + id);
+            const selectBtn = document.getElementById('btn-select-' + id);
+            
+            if (selectedCharts.has(id)) {
+                selectedCharts.delete(id);
+                card.classList.remove('border-purple-500/50', 'bg-purple-500/5');
+                card.classList.add('border-slate-800/60');
+                selectBtn.innerText = 'Seleccionar Gráfico';
+                selectBtn.classList.remove('bg-purple-600', 'text-white');
+                selectBtn.classList.add('bg-slate-800', 'text-slate-300', 'hover:bg-slate-700');
+            } else {
+                selectedCharts.add(id);
+                card.classList.add('border-purple-500/50', 'bg-purple-500/5');
+                card.classList.remove('border-slate-800/60');
+                selectBtn.innerText = '✓ Seleccionado';
+                selectBtn.classList.add('bg-purple-600', 'text-white');
+                selectBtn.classList.remove('bg-slate-800', 'text-slate-300', 'hover:bg-slate-700');
+            }
+
+            document.getElementById('selected-count').innerText = selectedCharts.size;
+        }
+
+        // Export selection to clipboard as text
+        function exportSelection() {
+            if (selectedCharts.size === 0) {
+                alert("Por favor, selecciona al menos un gráfico primero.");
+                return;
+            }
+            
+            let exportText = "PROYECTO BI GESTOBRA: LISTA DE GRÁFICOS SELECCIONADOS PARA DESARROLLAR\\n\\n";
+            chartProposals.forEach(p => {
+                if (selectedCharts.has(p.id)) {
+                    exportText += `- ${p.title}\\n  Tipo: ${p.type}\\n  Objetivo: ${p.objective}\\n  Métricas: ${p.metrics}\\n\\n`;
+                }
+            });
+
+            navigator.clipboard.writeText(exportText).then(() => {
+                alert("✓ ¡Lista de selección copiada al portapapeles! Puedes pegarla en un documento o chat.");
+            });
+        }
+
+        // Toggle function specifically for Proposal #2 (Pastel Dinámico de Fichajes)
+        function togglePastelSource(source) {
+            const chart = chartInstances['chart-2'];
+            const sourceData = chartProposals.find(p => p.id === 2).chartData[source];
+            
+            chart.data.labels = sourceData.labels;
+            chart.data.datasets[0].data = sourceData.values;
+            chart.update();
+
+            // Toggle active styles on sub-buttons
+            ['operarios', 'especialidades', 'proyectos'].forEach(src => {
+                const btn = document.getElementById(`btn-toggle-2-${src}`);
+                if (src === source) {
+                    btn.classList.add('bg-purple-600', 'text-white');
+                    btn.classList.remove('bg-slate-800', 'text-slate-400');
+                } else {
+                    btn.classList.remove('bg-purple-600', 'text-white');
+                    btn.classList.add('bg-slate-800', 'text-slate-400');
+                }
+            });
+        }
+
+        // Generate Cards on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('catalog-container');
+            
+            chartProposals.forEach(p => {
+                let leftColContent = '';
+                
+                if (p.chartType === 'html_kpi' || p.chartType === 'html_heatmap' || p.chartType === 'html_timeline' || p.chartType === 'html_inventory' || p.chartType === 'html_critical') {
+                    leftColContent = `<div class="w-full h-full p-4">${p.htmlContent}</div>`;
+                } else if (p.chartType === 'pie_toggleable') {
+                    leftColContent = `
+                        <div class="w-full h-full flex flex-col justify-between p-4">
+                            <div class="flex gap-2 justify-center mb-2">
+                                <button onclick="togglePastelSource('operarios')" id="btn-toggle-2-operarios" class="px-2 py-1 text-[10px] rounded font-semibold bg-purple-600 text-white transition-all font-outfit">Operarios</button>
+                                <button onclick="togglePastelSource('especialidades')" id="btn-toggle-2-especialidades" class="px-2 py-1 text-[10px] rounded font-semibold bg-slate-800 text-slate-400 hover:text-slate-200 transition-all font-outfit">Especialidades</button>
+                                <button onclick="togglePastelSource('proyectos')" id="btn-toggle-2-proyectos" class="px-2 py-1 text-[10px] rounded font-semibold bg-slate-800 text-slate-400 hover:text-slate-200 transition-all font-outfit">Proyectos</button>
+                            </div>
+                            <div class="relative flex-grow h-[180px] w-full flex items-center justify-center">
+                                <canvas id="canvas-${p.id}"></canvas>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    leftColContent = `
+                        <div class="relative w-full h-full min-h-[220px] flex items-center justify-center p-4">
+                            <canvas id="canvas-${p.id}"></canvas>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML += `
+                    <div id="card-${p.id}" data-category="${p.category}" class="proposal-card flex flex-col md:flex-row glass border border-slate-800/60 rounded-3xl overflow-hidden hover:border-slate-700/60 transition-all duration-300">
+                        <!-- Chart Display Side -->
+                        <div class="w-full md:w-[45%] bg-slate-900/40 border-b md:border-b-0 md:border-r border-slate-800/40 min-h-[240px] flex items-center justify-center">
+                            ${leftColContent}
+                        </div>
+                        
+                        <!-- Description Side -->
+                        <div class="w-full md:w-[55%] p-6 flex flex-col justify-between gap-4">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-slate-800 text-slate-400 border border-slate-700/60 font-outfit">${p.category_label}</span>
+                                    <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/10 font-outfit">${p.type}</span>
+                                </div>
+                                <h3 class="text-xl font-bold font-outfit text-white mt-3">${p.title}</h3>
+                                <div class="mt-3">
+                                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-outfit block">Objetivo Analítico</span>
+                                    <p class="text-sm text-slate-300 mt-1">${p.objective}</p>
+                                </div>
+                                <div class="mt-4 bg-slate-900/30 border border-slate-800/50 rounded-2xl p-3.5">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-outfit block">Variables / Métricas SQL</span>
+                                    <code class="text-xs text-purple-300 font-mono mt-1 block leading-relaxed">${p.metrics}</code>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center border-t border-slate-800/40 pt-4 mt-2">
+                                <span class="text-xs text-slate-500">ID Propuesta: #${p.id}</span>
+                                <button onclick="toggleSelection(${p.id})" id="btn-select-${p.id}" class="bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl transition-all font-outfit">
+                                    Seleccionar Gráfico
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Initialize Charts
+            chartProposals.forEach(p => {
+                if (p.chartType === 'html_kpi' || p.chartType === 'html_heatmap' || p.chartType === 'html_timeline' || p.chartType === 'html_inventory' || p.chartType === 'html_critical') {
+                    return;
+                }
+
+                const ctx = document.getElementById('canvas-' + p.id).getContext('2d');
+                
+                if (p.chartType === 'pie_toggleable') {
+                    // Initialize Proposal #2 with first config (operarios)
+                    const opData = p.chartData.operarios;
+                    chartInstances['chart-' + p.id] = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: opData.labels,
+                            datasets: [{
+                                data: opData.values,
+                                backgroundColor: [
+                                    'rgba(139, 92, 246, 0.7)',
+                                    'rgba(59, 130, 246, 0.7)',
+                                    'rgba(16, 185, 129, 0.7)',
+                                    'rgba(245, 158, 11, 0.7)',
+                                    'rgba(236, 72, 153, 0.7)'
+                                ],
+                                borderColor: 'rgba(15, 23, 42, 0.9)',
+                                borderWidth: 2
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'bottom', labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 9 } } }
+                            }
+                        }
+                    });
+                } else if (p.chartType === 'gauge') {
+                    chartInstances['chart-' + p.id] = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: p.chartData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            aspectRatio: 2,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: { enabled: false }
+                            }
+                        }
+                    });
+                } else if (p.chartType === 'pareto') {
+                    chartInstances['chart-' + p.id] = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: p.chartData.labels,
+                            datasets: [
+                                {
+                                    label: 'Horas Imputadas',
+                                    data: p.chartData.hours,
+                                    backgroundColor: 'rgba(99, 102, 241, 0.65)',
+                                    borderColor: 'rgba(99, 102, 241, 1)',
+                                    borderWidth: 1.5,
+                                    borderRadius: 4,
+                                    yAxisID: 'y'
+                                },
+                                {
+                                    label: '% Acumulado',
+                                    type: 'line',
+                                    data: p.chartData.pct,
+                                    borderColor: 'rgba(236, 72, 153, 1)',
+                                    backgroundColor: 'transparent',
+                                    borderWidth: 2,
+                                    yAxisID: 'y1'
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: { type: 'linear', display: true, position: 'left', ticks: { color: '#64748b' } },
+                                y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#64748b' } }
+                            },
+                            plugins: {
+                                legend: { position: 'bottom', labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 9 } } }
+                            }
+                        }
+                    });
+                } else if (p.chartType === 'bar_horizontal') {
+                    chartInstances['chart-' + p.id] = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: p.chartData.labels,
+                            datasets: [{
+                                label: 'Mensajes / Audios',
+                                data: p.chartData.values,
+                                backgroundColor: 'rgba(16, 185, 129, 0.65)',
+                                borderColor: 'rgba(16, 185, 129, 1)',
+                                borderWidth: 1.5,
+                                borderRadius: 4
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: { ticks: { color: '#64748b' } },
+                                y: { ticks: { color: '#64748b' } }
+                            }
+                        }
+                    });
+                } else if (p.chartType === 'bar_horizontal_pct') {
+                    chartInstances['chart-' + p.id] = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: p.chartData.labels,
+                            datasets: [{
+                                label: 'Porcentaje de Uso (%)',
+                                data: p.chartData.values,
+                                backgroundColor: 'rgba(245, 158, 11, 0.65)',
+                                borderColor: 'rgba(245, 158, 11, 1)',
+                                borderWidth: 1.5,
+                                borderRadius: 4
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: { max: 100, ticks: { color: '#64748b' } },
+                                y: { ticks: { color: '#64748b' } }
+                            }
+                        }
+                    });
+                } else {
+                    // Default Chart initialization
+                    chartInstances['chart-' + p.id] = new Chart(ctx, {
+                        type: p.chartType,
+                        data: p.chartData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { 
+                                    position: 'bottom', 
+                                    labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 9 } } 
+                                }
+                            },
+                            scales: p.chartType !== 'doughnut' && p.chartType !== 'pie' && p.chartType !== 'radar' ? {
+                                x: { ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans', size: 8 } } },
+                                y: { ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans', size: 8 } } }
+                            } : undefined
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

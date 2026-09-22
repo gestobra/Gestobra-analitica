@@ -1,0 +1,12 @@
+gestobra:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: '{{ env_var(''DBT_HOST'', ''app.gestobra.com'') }}'
+      user: '{{ env_var(''DBT_USER'', ''gestobra_user'') }}'
+      pass: '{{ env_var(''DBT_PASSWORD'', ''T5FJvlpdg9OzJKd'') }}'
+      port: 5432
+      dbname: gestobra
+      schema: analytics
+      threads: 4

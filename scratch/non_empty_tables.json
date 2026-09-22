@@ -1,0 +1,4260 @@
+{
+  "counts": {
+    "accessories": 2,
+    "ai_jobs": 8924,
+    "cache": 72,
+    "cargos": 36,
+    "channels": 2,
+    "checkpoint_blobs": 36754,
+    "checkpoint_migrations": 10,
+    "checkpoint_writes": 37201,
+    "checkpoints": 26126,
+    "cities": 802,
+    "companies": 15,
+    "countries": 2,
+    "daily_sessions": 2306,
+    "file_types": 7,
+    "files": 12,
+    "flyway_schema_history": 47,
+    "messages": 2904,
+    "migrations": 36,
+    "milestones": 7,
+    "notification_channels": 1798,
+    "notification_items": 182,
+    "notification_type_channels": 17,
+    "notification_types": 10,
+    "notifications": 1814,
+    "password_reset_tokens": 1,
+    "people": 178,
+    "person_absences": 12,
+    "person_specialty": 62,
+    "personal_access_tokens": 100,
+    "plan_price_versions": 3,
+    "plans": 4,
+    "project_comments": 361,
+    "project_imputations": 534,
+    "project_schedule_resource": 7151,
+    "project_schedules": 738,
+    "project_specialty": 1,
+    "projects": 314,
+    "reports": 154,
+    "resources": 184,
+    "sessions": 19,
+    "specialties": 29,
+    "specialty_task": 305,
+    "specialty_task_template": 8,
+    "specialty_user": 23,
+    "states": 68,
+    "task_comments": 216,
+    "task_recurrences": 12,
+    "task_schedule_resource": 2992,
+    "task_schedules": 1690,
+    "task_templates": 28,
+    "tasks": 910,
+    "team_absences": 34,
+    "team_invitations": 6,
+    "team_user": 109,
+    "team_workday_settings": 2,
+    "teams": 13,
+    "time_clock_corrections": 68,
+    "time_clock_records": 2060,
+    "user_notification_preferences": 12,
+    "users": 100,
+    "vehicle_accessories": 2,
+    "vehicles": 5,
+    "voice_inputs": 338,
+    "whatsapp_action_log": 51775,
+    "whatsapp_comment_links": 61,
+    "whatsapp_inbound_messages": 10821,
+    "whatsapp_media_inputs": 268,
+    "workday_reminder_log": 904
+  },
+  "schemas": {
+    "accessories": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "category",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "ai_jobs": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "queue_name",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "payload",
+        "type": "json",
+        "nullable": "NO"
+      },
+      {
+        "name": "status",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "attempts",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "max_attempts",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "run_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "locked_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "locked_by",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "last_error",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "cache": [
+      {
+        "name": "key",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "value",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "expiration",
+        "type": "integer",
+        "nullable": "NO"
+      }
+    ],
+    "cargos": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "channels": [
+      {
+        "name": "code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "checkpoint_blobs": [
+      {
+        "name": "thread_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "checkpoint_ns",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "channel",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "version",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "type",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "blob",
+        "type": "bytea",
+        "nullable": "YES"
+      }
+    ],
+    "checkpoint_migrations": [
+      {
+        "name": "v",
+        "type": "integer",
+        "nullable": "NO"
+      }
+    ],
+    "checkpoint_writes": [
+      {
+        "name": "thread_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "checkpoint_ns",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "checkpoint_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "task_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "idx",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "channel",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "type",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "blob",
+        "type": "bytea",
+        "nullable": "NO"
+      },
+      {
+        "name": "task_path",
+        "type": "text",
+        "nullable": "NO"
+      }
+    ],
+    "checkpoints": [
+      {
+        "name": "thread_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "checkpoint_ns",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "checkpoint_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "parent_checkpoint_id",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "type",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "checkpoint",
+        "type": "jsonb",
+        "nullable": "NO"
+      },
+      {
+        "name": "metadata",
+        "type": "jsonb",
+        "nullable": "NO"
+      }
+    ],
+    "cities": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "state_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      }
+    ],
+    "companies": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "tax_id",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "country_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "address",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "state",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "city",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "postal_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "phone",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "email",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "website",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "iban",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "countries": [
+      {
+        "name": "code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "phone_prefix",
+        "type": "character varying",
+        "nullable": "YES"
+      }
+    ],
+    "daily_sessions": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "session_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "state",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "active_task_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "pending_action",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "started_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "finished_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "active_task_task_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "active_task_started_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "state_context",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "hourly_summary_cursor_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "active_project_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "active_project_schedule_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "active_project_started_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "active_project_imputation_id",
+        "type": "bigint",
+        "nullable": "YES"
+      }
+    ],
+    "file_types": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "fileable_type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "fileable_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "files": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "storage_disk",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "storage_path",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "original_name",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "mime_type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "size_bytes",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "sha256",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "file_type_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "uploaded_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "version",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "comment",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "flyway_schema_history": [
+      {
+        "name": "installed_rank",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "version",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "description",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "script",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "checksum",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "installed_by",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "installed_on",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "execution_time",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "success",
+        "type": "boolean",
+        "nullable": "NO"
+      }
+    ],
+    "messages": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "person_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "contact_name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "contact_phone",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_phone",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "content",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "channel",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "direction",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "ai_summary",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "audio_url",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "call_duration",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_read",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "read_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "migrations": [
+      {
+        "name": "id",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "migration",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "batch",
+        "type": "integer",
+        "nullable": "NO"
+      }
+    ],
+    "milestones": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "project_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "title",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "milestone_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "completed",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "order",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "notification_channels": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "notification_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "channel_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "status",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "external_message_id",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "error_message",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "sent_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "notification_items": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "notification_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "item_type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "actor_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "actor_person_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "title",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "happened_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "metadata_json",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "notification_type_channels": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "notification_type_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "channel_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "default_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "mandatory",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "notification_types": [
+      {
+        "name": "code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "description",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "notifications": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "notification_type_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "title",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "status",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "priority",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "metadata_json",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "sent_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "read_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "aggregation_key",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "aggregation_date",
+        "type": "date",
+        "nullable": "YES"
+      },
+      {
+        "name": "aggregation_mode",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "source_entity_type",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "source_entity_id",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "last_activity_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "event_count",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "payload_json",
+        "type": "text",
+        "nullable": "YES"
+      }
+    ],
+    "password_reset_tokens": [
+      {
+        "name": "email",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "token",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "people": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "company_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "phone",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "phone_secondary",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "email",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "notes",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_client",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_worker",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_external_worker",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_supplier",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "billing_type",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "language",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "cargo_id",
+        "type": "bigint",
+        "nullable": "YES"
+      }
+    ],
+    "person_absences": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "person_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "start_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "reason",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "comments",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "person_specialty": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "person_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "specialty_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "personal_access_tokens": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "tokenable_type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "tokenable_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "token",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "abilities",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "last_used_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "expires_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "plan_price_versions": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "plan_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "stripe_price_id",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "unit_amount",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "currency",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "billing_interval",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "interval_count",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "sync_status",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "valid_from",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "valid_to",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      }
+    ],
+    "plans": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "price_per_user",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "currency",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "limits_json",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_custom",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "max_gestors",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "max_operario_jefe",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "max_operarios",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "extra_gestor_price",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "extra_operario_jefe_price",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "extra_operario_price",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "monthly_price",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "ai_credits_monthly",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "ai_pack_a_credits",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "ai_pack_a_price",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "ai_pack_b_credits",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "ai_pack_b_price",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "ai_pack_c_credits",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "ai_pack_c_price",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "billing_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "stripe_product_id",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_public",
+        "type": "boolean",
+        "nullable": "NO"
+      }
+    ],
+    "project_comments": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "project_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "author_user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "files",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "tags",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "original_body",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "parent_comment_id",
+        "type": "bigint",
+        "nullable": "YES"
+      }
+    ],
+    "project_imputations": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "project_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "resource_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "amount",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "minutes",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "hourly_rate",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "file_path",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "file_name",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "task_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "started_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "finished_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "original_minutes",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_corrected",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "correction_reason",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "corrected_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "corrected_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "correction_source",
+        "type": "character varying",
+        "nullable": "YES"
+      }
+    ],
+    "project_schedule_resource": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "project_schedule_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "resource_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_responsible",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "shift_minutes",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "notes",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "order_index",
+        "type": "integer",
+        "nullable": "YES"
+      }
+    ],
+    "project_schedules": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "project_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "scheduled_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "order",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "project_specialty": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "project_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "specialty_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "projects": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "address",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "country_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "state",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "city",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "postal_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "status",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "owner_user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "start_date",
+        "type": "date",
+        "nullable": "YES"
+      },
+      {
+        "name": "end_date",
+        "type": "date",
+        "nullable": "YES"
+      },
+      {
+        "name": "actual_end_date",
+        "type": "date",
+        "nullable": "YES"
+      },
+      {
+        "name": "budget",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "actual_cost",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "hourly_rate",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "project_type",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "client_person_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "leader_person_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "working_days",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "notes",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "total_area",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "planner_color",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "actual_start_date",
+        "type": "date",
+        "nullable": "YES"
+      }
+    ],
+    "reports": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_by_user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "status",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "params_json",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "file_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "error_text",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "resources": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "nickname",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "hourly_rate",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "daily_capacity_minutes",
+        "type": "integer",
+        "nullable": "YES"
+      }
+    ],
+    "sessions": [
+      {
+        "name": "id",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "ip_address",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "user_agent",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "payload",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "last_activity",
+        "type": "integer",
+        "nullable": "NO"
+      }
+    ],
+    "specialties": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "color",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "icon",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "specialty_task": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "specialty_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "task_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "specialty_task_template": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "task_template_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "specialty_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "specialty_user": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "specialty_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "states": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "country_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      }
+    ],
+    "task_comments": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "task_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "author_user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "files",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "tags",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "original_body",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "parent_comment_id",
+        "type": "bigint",
+        "nullable": "YES"
+      }
+    ],
+    "task_recurrences": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "frequency",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "weekdays",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "day_of_month",
+        "type": "smallint",
+        "nullable": "YES"
+      },
+      {
+        "name": "start_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_date",
+        "type": "date",
+        "nullable": "YES"
+      },
+      {
+        "name": "occurrences_count",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "base_title",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "base_description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "project_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "estimated_hours",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "default_operators",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "tasks_generated",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "priority",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "source",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "country_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "specialty_ids",
+        "type": "jsonb",
+        "nullable": "YES"
+      }
+    ],
+    "task_schedule_resource": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "task_schedule_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "resource_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "is_responsible",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "shift_minutes",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "worked_minutes",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "imputed_minutes",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "started_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "finished_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "order_index",
+        "type": "integer",
+        "nullable": "YES"
+      }
+    ],
+    "task_schedules": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "task_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "scheduled_date",
+        "type": "date",
+        "nullable": "YES"
+      },
+      {
+        "name": "order",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "task_templates": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "person_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "estimated_hours",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "leader_person_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "priority",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "source",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "shift_hours",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "hourly_rate",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "address",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "country_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "state",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "city",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "postal_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "post_complete_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "post_complete_action",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "post_complete_message",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "post_cancel_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "post_cancel_action",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "post_cancel_message",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "default_operators",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "template_type",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "frequency",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "weekdays",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "day_of_month",
+        "type": "smallint",
+        "nullable": "YES"
+      },
+      {
+        "name": "end_mode",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "occurrences_count",
+        "type": "smallint",
+        "nullable": "YES"
+      },
+      {
+        "name": "working_days",
+        "type": "jsonb",
+        "nullable": "YES"
+      }
+    ],
+    "tasks": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "project_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "person_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "leader_person_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "task_recurrence_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "title",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "description",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "address",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "country_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "state",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "city",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "postal_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "status",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "order",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "priority",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "started_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "completed_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "time_to_complete",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "estimated_hours",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "shift_hours",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "hourly_rate",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "actual_cost",
+        "type": "numeric",
+        "nullable": "NO"
+      },
+      {
+        "name": "default_operators",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "working_days",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "source",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "source_name",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "source_phone",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "source_email",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "post_complete_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "post_complete_action",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "post_complete_message",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "post_cancel_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "post_cancel_action",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "post_cancel_message",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "recurrence_scheduled_date",
+        "type": "date",
+        "nullable": "YES"
+      }
+    ],
+    "team_absences": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "start_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "reason",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "comments",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "team_invitations": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "email",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "role",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "phone",
+        "type": "character varying",
+        "nullable": "YES"
+      }
+    ],
+    "team_user": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "role",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "hourly_rate",
+        "type": "numeric",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "team_workday_settings": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "timezone",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "workdays",
+        "type": "ARRAY",
+        "nullable": "NO"
+      },
+      {
+        "name": "workday_start_time",
+        "type": "time without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "workday_end_time",
+        "type": "time without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "start_reminder_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_reminder_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "start_reminder_offset_minutes",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_reminder_offset_minutes",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "start_reminder_cutoff_time",
+        "type": "time without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "end_reminder_cutoff_time",
+        "type": "time without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_active",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_reminder_trigger_mode",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_reminder_after_start_minutes",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "workday_reminder_recipient_roles",
+        "type": "ARRAY",
+        "nullable": "NO"
+      }
+    ],
+    "teams": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "personal_team",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "legal_name",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "vat",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "domain",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "status",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "plan_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "billing_email",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "billing_name",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "billing_address",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "billing_country",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "billing_state",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "billing_city",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "billing_postal_code",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "currency",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "timezone",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "contact_name",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "contact_email",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "contact_phone",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "workday_start",
+        "type": "time without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "workday_end",
+        "type": "time without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "week_starts_on",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "daily_summary_time",
+        "type": "time without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "working_days",
+        "type": "jsonb",
+        "nullable": "YES"
+      },
+      {
+        "name": "require_task_approval",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "allow_auto_schedule",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "logo_url",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "daily_flow_projects_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "company_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "report_language",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_workday_agent_enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "end_workday_agent_roles",
+        "type": "ARRAY",
+        "nullable": "NO"
+      }
+    ],
+    "time_clock_corrections": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "record_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "person_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "previous_entry_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "previous_exit_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "new_entry_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "new_exit_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "reason",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "corrected_by_user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "corrected_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "correction_source",
+        "type": "character varying",
+        "nullable": "NO"
+      }
+    ],
+    "time_clock_records": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "person_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "work_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "entry_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "exit_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "entry_recorded_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "exit_recorded_by_user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "original_entry_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "original_exit_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_corrected",
+        "type": "boolean",
+        "nullable": "NO"
+      }
+    ],
+    "user_notification_preferences": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "notification_type_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "channel_code",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "enabled",
+        "type": "boolean",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "reminder_days_before",
+        "type": "integer",
+        "nullable": "YES"
+      }
+    ],
+    "users": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "name",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "email",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "email_verified_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "phone",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "password",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "remember_token",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "current_team_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "profile_photo_path",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "timezone",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "language",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "two_factor_secret",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "two_factor_recovery_codes",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "two_factor_confirmed_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "is_admin",
+        "type": "boolean",
+        "nullable": "NO"
+      }
+    ],
+    "vehicle_accessories": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "vehicle_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "accessory_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "quantity",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "notes",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      }
+    ],
+    "vehicles": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "license_plate",
+        "type": "character varying",
+        "nullable": "NO"
+      },
+      {
+        "name": "brand",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "model",
+        "type": "character varying",
+        "nullable": "YES"
+      },
+      {
+        "name": "daily_rate",
+        "type": "numeric",
+        "nullable": "YES"
+      }
+    ],
+    "voice_inputs": [
+      {
+        "name": "id",
+        "type": "uuid",
+        "nullable": "NO"
+      },
+      {
+        "name": "log_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "inbound_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "session_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "task_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "phone",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "wa_media_id",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "media_mime",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "media_duration_ms",
+        "type": "integer",
+        "nullable": "YES"
+      },
+      {
+        "name": "s3_bucket",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "s3_key_original",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "s3_key_normalized",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "transcript_text",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "transcript_lang",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "transcript_status",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "transcript_ts",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "last_error",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp without time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "dispatched_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES"
+      }
+    ],
+    "whatsapp_action_log": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "process_name",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "action_type",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "direction",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "session_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "task_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "phone",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "wa_message_id",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "message_type",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "button_id",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "message_text",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "payload",
+        "type": "json",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp without time zone",
+        "nullable": "NO"
+      }
+    ],
+    "whatsapp_comment_links": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "comment_type",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "comment_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "inbound_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "wa_message_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "phone",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "session_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      }
+    ],
+    "whatsapp_inbound_messages": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "wa_message_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "phone",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "message_type",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "wa_media_id",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "status",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "attempts",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "first_seen_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "last_seen_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "last_error",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "last_log_id",
+        "type": "bigint",
+        "nullable": "YES"
+      }
+    ],
+    "whatsapp_media_inputs": [
+      {
+        "name": "id",
+        "type": "uuid",
+        "nullable": "NO"
+      },
+      {
+        "name": "inbound_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "log_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "session_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "task_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "phone",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "wa_media_id",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "media_kind",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "media_mime",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "caption",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "filename",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "s3_bucket",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "s3_key_original",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "file_size",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "task_comment_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "status",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "last_error",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "project_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "project_comment_id",
+        "type": "bigint",
+        "nullable": "YES"
+      }
+    ],
+    "workday_reminder_log": [
+      {
+        "name": "id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "team_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "person_id",
+        "type": "bigint",
+        "nullable": "NO"
+      },
+      {
+        "name": "user_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "reminder_type",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "reminder_date",
+        "type": "date",
+        "nullable": "NO"
+      },
+      {
+        "name": "status",
+        "type": "text",
+        "nullable": "NO"
+      },
+      {
+        "name": "result_reason",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "phone",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "daily_session_id",
+        "type": "bigint",
+        "nullable": "YES"
+      },
+      {
+        "name": "template_name",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "locked_by",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "locked_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "attempt_count",
+        "type": "integer",
+        "nullable": "NO"
+      },
+      {
+        "name": "last_attempt_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "sent_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "failed_at",
+        "type": "timestamp with time zone",
+        "nullable": "YES"
+      },
+      {
+        "name": "error_message",
+        "type": "text",
+        "nullable": "YES"
+      },
+      {
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      },
+      {
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "nullable": "NO"
+      }
+    ]
+  }
+}

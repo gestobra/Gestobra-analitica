@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GestObra Live BI Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 50%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow {
+            box-shadow: 0 0 50px -10px rgba(139, 92, 246, 0.15);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-slate-200 h-full flex flex-col bg-slate-950 selection:bg-purple-500 selection:text-white overflow-y-auto">
+    <!-- Background glows -->
+    <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-purple-900/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-900/10 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+
+    <div class="max-w-[1600px] mx-auto w-full p-4 lg:p-8 flex-grow flex flex-col gap-6">
+        <!-- Header -->
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-6 border-b border-slate-800/60">
+            <div>
+                <div class="flex items-center gap-3">
+                    <span class="px-3 py-1 text-xs font-semibold uppercase tracking-wider rounded-full bg-red-500/10 text-red-400 border border-red-500/20 font-outfit">Módulo BI - Live</span>
+                    <span class="text-xs text-slate-500 font-medium">Conexión Directa a PostgreSQL</span>
+                </div>
+                <h1 class="text-3xl lg:text-4xl font-extrabold font-outfit text-white tracking-tight mt-2 flex items-center gap-2">
+                    <span class="text-gradient">GestObra</span> Live Dashboard
+                </h1>
+                <p class="text-slate-400 text-sm mt-1">Reportes en tiempo real generados mediante consultas directas a las tablas de producción.</p>
+            </div>
+            <div class="glass px-4 py-3 rounded-2xl flex items-center gap-3 self-stretch sm:self-auto justify-center sm:justify-start">
+                <div class="w-3.5 h-3.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                <div class="text-xs text-slate-300 font-medium font-outfit">Servidor Conectado</div>
+            </div>
+        </header>
+
+        <!-- Filters Panel -->
+        <section class="glass p-5 rounded-3xl glow flex flex-col md:flex-row gap-4 items-center">
+            <div class="flex-grow w-full md:w-auto">
+                <label for="filter-client" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider font-outfit mb-2">Filtrar por Cliente</label>
+                <select id="filter-client" onchange="onClientChange()" class="w-full bg-slate-900/80 border border-slate-800 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-purple-500 font-outfit cursor-pointer">
+                    <option value="all">Todos los Clientes</option>
+                </select>
+            </div>
+            <div class="flex-grow w-full md:w-auto">
+                <label for="filter-project" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider font-outfit mb-2">Filtrar por Proyecto (Obra)</label>
+                <select id="filter-project" onchange="onProjectChange()" class="w-full bg-slate-900/80 border border-slate-800 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-purple-500 font-outfit cursor-pointer">
+                    <option value="all">Todos los Proyectos</option>
+                </select>
+            </div>
+            <div class="flex-grow w-full md:w-auto">
+                <label for="filter-person" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider font-outfit mb-2">Filtrar por Persona (Operario)</label>
+                <select id="filter-person" onchange="onPersonChange()" class="w-full bg-slate-900/80 border border-slate-800 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-purple-500 font-outfit cursor-pointer">
+                    <option value="all">Todas las Personas</option>
+                </select>
+            </div>
+            <div class="w-full md:w-auto md:self-end">
+                <button onclick="resetFilters()" class="w-full bg-purple-600/85 hover:bg-purple-600 text-white font-semibold text-sm rounded-xl px-5 py-2.5 transition-all font-outfit border border-purple-500/30">
+                    Limpiar Filtros
+                </button>
+            </div>
+        </section>
+
+        <!-- Loader overlay -->
+        <div id="loader" class="hidden flex items-center justify-center p-12 glass rounded-3xl">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-500"></div>
+            <span class="ml-3 text-slate-400 text-sm font-outfit">Consultando base de datos en vivo...</span>
+        </div>
+
+        <div id="dashboard-content" class="flex flex-col gap-6">
+            <!-- KPI Grid -->
+            <section class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Projects KPI -->
+                <div class="glass p-5 rounded-3xl glow hover:scale-[1.02] transition-transform duration-300">
+                    <span class="text-xs text-slate-400 font-semibold tracking-wider uppercase font-outfit">Proyectos</span>
+                    <div class="text-3xl font-bold font-outfit text-white mt-2" id="kpi-projects">-</div>
+                    <div class="text-xs text-emerald-400 mt-2 font-medium flex items-center gap-1">
+                        <span>Obras Registradas</span>
+                    </div>
+                </div>
+                <!-- Clocked Hours KPI -->
+                <div class="glass p-5 rounded-3xl glow hover:scale-[1.02] transition-transform duration-300">
+                    <span class="text-xs text-slate-400 font-semibold tracking-wider uppercase font-outfit">H. Fichadas</span>
+                    <div class="text-3xl font-bold font-outfit text-white mt-2" id="kpi-clocked">-</div>
+                    <div class="text-xs text-indigo-400 mt-2 font-medium">Control de Reloj de Entrada</div>
+                </div>
+                <!-- Imputed Hours KPI -->
+                <div class="glass p-5 rounded-3xl glow hover:scale-[1.02] transition-transform duration-300">
+                    <span class="text-xs text-slate-400 font-semibold tracking-wider uppercase font-outfit">H. Imputadas</span>
+                    <div class="text-3xl font-bold font-outfit text-white mt-2" id="kpi-imputed">-</div>
+                    <div class="text-xs text-purple-400 mt-2 font-medium">Cargadas en Tareas</div>
+                </div>
+                <!-- Labor Cost KPI -->
+                <div class="glass p-5 rounded-3xl glow hover:scale-[1.02] transition-transform duration-300">
+                    <span class="text-xs text-slate-400 font-semibold tracking-wider uppercase font-outfit">Costo Operarios</span>
+                    <div class="text-3xl font-bold font-outfit text-white mt-2" id="kpi-cost">-</div>
+                    <div class="text-xs text-pink-400 mt-2 font-medium">Calculado s/ Tarifa Horaria</div>
+                </div>
+                <!-- WA Reports KPI -->
+                <div class="glass p-5 rounded-3xl glow hover:scale-[1.02] transition-transform duration-300 col-span-2 lg:col-span-1">
+                    <span class="text-xs text-slate-400 font-semibold tracking-wider uppercase font-outfit">Reportes WhatsApp</span>
+                    <div class="text-3xl font-bold font-outfit text-white mt-2" id="kpi-whatsapp">-</div>
+                    <div class="text-xs text-blue-400 mt-2 font-medium">Mensajes, Audios e Imágenes</div>
+                </div>
+            </section>
+
+            <!-- Charts Grid Section 1 -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Project Cost & Hours Chart -->
+                <div class="glass p-6 rounded-3xl col-span-2 flex flex-col gap-4">
+                    <h3 class="text-lg font-bold font-outfit text-white">Consumos por Obra / Proyecto</h3>
+                    <div class="relative h-[320px] w-full flex items-center justify-center">
+                        <canvas id="projectChart"></canvas>
+                    </div>
+                </div>
+                 <!-- WhatsApp Activity Doughnuts -->
+                <div class="glass p-6 rounded-3xl flex flex-col gap-4 col-span-1">
+                    <h3 class="text-lg font-bold font-outfit text-white">Canales e Interacción WhatsApp</h3>
+                    <div class="flex flex-col gap-6 h-full justify-between">
+                        <div class="flex-1 flex flex-col items-center">
+                            <span class="text-xs text-slate-400 font-semibold tracking-wider uppercase font-outfit self-start">Entrantes (Inbound)</span>
+                            <div class="relative h-[160px] w-full flex items-center justify-center mt-2">
+                                <canvas id="waInboundChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="flex-1 flex flex-col items-center border-t border-slate-800/40 pt-4">
+                            <span class="text-xs text-slate-400 font-semibold tracking-wider uppercase font-outfit self-start">Salientes (Outbound)</span>
+                            <div class="relative h-[160px] w-full flex items-center justify-center mt-2">
+                                <canvas id="waOutboundChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Grid Section 2 -->
+            <section class="grid grid-cols-1 gap-6">
+                <!-- Clocked vs Imputed Comparison Chart -->
+                <div class="glass p-6 rounded-3xl flex flex-col gap-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h3 class="text-lg font-bold font-outfit text-white">Comparativa de Horas por Operario / Fecha</h3>
+                        
+                        <!-- Chart Controls -->
+                        <div class="flex flex-wrap gap-3 items-center w-full sm:w-auto">
+                            <div>
+                                <select id="chart-person-group" onchange="updatePersonChart()" class="bg-slate-900 border border-slate-800 text-slate-300 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-purple-500 font-outfit cursor-pointer">
+                                    <option value="operario">Ver por Operario</option>
+                                    <option value="fecha">Ver por Fecha</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select id="chart-person-sort" onchange="updatePersonChart()" class="bg-slate-900 border border-slate-800 text-slate-300 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-purple-500 font-outfit cursor-pointer">
+                                    <option value="default">Ordenar por Nombre / Fecha</option>
+                                    <option value="clocked">Ordenar por H. Fichadas</option>
+                                    <option value="imputed">Ordenar por H. Imputadas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select id="chart-person-order" onchange="updatePersonChart()" class="bg-slate-900 border border-slate-800 text-slate-300 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-purple-500 font-outfit cursor-pointer">
+                                    <option value="desc">Descendente</option>
+                                    <option value="asc">Ascendente</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative h-[380px] w-full flex items-center justify-center">
+                        <canvas id="personChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Grid Section 3 -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Clocked Hours by Project Chart -->
+                <div class="glass p-6 rounded-3xl flex flex-col gap-4">
+                    <h3 class="text-lg font-bold font-outfit text-white">Horas Fichadas Distribuídas por Obra / Proyecto</h3>
+                    <div class="relative h-[320px] w-full flex items-center justify-center">
+                        <canvas id="clockedProjectChart"></canvas>
+                    </div>
+                </div>
+                <!-- Clocked Hours by Person Chart -->
+                <div class="glass p-6 rounded-3xl flex flex-col gap-4">
+                    <h3 class="text-lg font-bold font-outfit text-white">Total Horas Fichadas por Operario</h3>
+                    <div class="relative h-[320px] w-full flex items-center justify-center">
+                        <canvas id="clockedPersonChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tables & Lists Section -->
+            <section class="glass rounded-3xl flex flex-col overflow-hidden">
+                <!-- Tabs -->
+                <div class="flex border-b border-slate-800/80 bg-slate-900/40 font-outfit font-medium">
+                    <button onclick="switchTab('alerts')" id="tab-btn-alerts" class="px-6 py-4 text-sm font-semibold border-b-2 border-purple-500 text-white flex items-center gap-2 transition-all">
+                        <span>Alertas de Fichajes</span>
+                        <span id="alerts-count" class="px-2 py-0.5 text-xs bg-purple-500/20 text-purple-400 rounded-full border border-purple-500/20">-</span>
+                    </button>
+                    <button onclick="switchTab('projects')" id="tab-btn-projects" class="px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-800 flex items-center gap-2 transition-all">
+                        <span>Detalle de Proyectos</span>
+                    </button>
+                    <button onclick="switchTab('operarios')" id="tab-btn-operarios" class="px-6 py-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-800 flex items-center gap-2 transition-all">
+                        <span>Control de Operarios</span>
+                    </button>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="p-6">
+                    <!-- Alerts Table -->
+                    <div id="tab-alerts" class="tab-content block overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="text-xs uppercase text-slate-400 border-b border-slate-800/60 font-outfit font-semibold">
+                                <tr>
+                                    <th class="pb-3 px-2">Fecha</th>
+                                    <th class="pb-3 px-2">Operario</th>
+                                    <th class="pb-3 px-2 text-right">Horas Fichadas</th>
+                                    <th class="pb-3 px-2 text-right">Horas Imputadas</th>
+                                    <th class="pb-3 px-2 text-right">Desviación</th>
+                                    <th class="pb-3 px-2 text-center">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alerts-tbody" class="divide-y divide-slate-800/30">
+                                <!-- Injected rows -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Projects Table -->
+                    <div id="tab-projects" class="tab-content hidden overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="text-xs uppercase text-slate-400 border-b border-slate-800/60 font-outfit font-semibold">
+                                <tr>
+                                    <th class="pb-3 px-2">Proyecto</th>
+                                    <th class="pb-3 px-2">Cliente</th>
+                                    <th class="pb-3 px-2">Estado</th>
+                                    <th class="pb-3 px-2 text-right">Presupuesto</th>
+                                    <th class="pb-3 px-2 text-right">Costo Real (Base)</th>
+                                    <th class="pb-3 px-2 text-right">Horas Imputadas</th>
+                                    <th class="pb-3 px-2 text-right">Costo Personal (M.O.)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projects-tbody" class="divide-y divide-slate-800/30">
+                                <!-- Injected rows -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Operarios Table -->
+                    <div id="tab-operarios" class="tab-content hidden overflow-x-auto">
+                        <table class="w-full text-left text-sm text-slate-300">
+                            <thead class="text-xs uppercase text-slate-400 border-b border-slate-800/60 font-outfit font-semibold">
+                                <tr>
+                                    <th class="pb-3 px-2">Nombre</th>
+                                    <th class="pb-3 px-2">Cargo / Rol</th>
+                                    <th class="pb-3 px-2 text-right">Horas Fichadas</th>
+                                    <th class="pb-3 px-2 text-right">Horas Imputadas</th>
+                                    <th class="pb-3 px-2 text-right">Costo Calculado</th>
+                                    <th class="pb-3 px-2 text-center">Interacción Bot (Msg/Voz/Media)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="operarios-tbody" class="divide-y divide-slate-800/30">
+                                <!-- Injected rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-900/60 py-6 px-4 bg-slate-950/80 text-center text-xs text-slate-500 font-outfit">
+        <span>GestObra Live BI Dashboard &copy; 2026. Consultas directas a base de datos PostgreSQL.</span>
+    </footer>
+
+    <!-- Script to Load Data from Backend Server -->
+    <script>
+        let liveData = null;
+        let selectedClient = "all";
+        let selectedProject = "all";
+        let selectedPerson = "all";
+
+        let projectChartInstance = null;
+        let personChartInstance = null;
+        let waChartInstance = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initCharts();
+            // Fetch initial live data and populate filters
+            fetchDashboardData(true); 
+        });
+
+        async function fetchDashboardData(firstLoad = false) {
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('dashboard-content').classList.add('opacity-40', 'pointer-events-none');
+            
+            try {
+                const response = await fetch(`/api/data?client=${selectedClient}&project=${selectedProject}&person=${selectedPerson}`);
+                liveData = await response.json();
+                
+                if (firstLoad) {
+                    populateFilters(liveData.filters);
+                }
+                
+                updateUI(liveData);
+            } catch (e) {
+                console.error("Error connecting to live API:", e);
+                alert("No se pudo conectar al servidor local de la API de GestObra. Asegúrate de tener corriendo 'python src/server.py' en la terminal.");
+            } finally {
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('dashboard-content').classList.remove('opacity-40', 'pointer-events-none');
+            }
+        }
+
+        function populateFilters(filters) {
+            const clientSelect = document.getElementById('filter-client');
+            const personSelect = document.getElementById('filter-person');
+            
+            // Populate Clients
+            filters.clients.forEach(c => {
+                clientSelect.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+
+            // Populate People
+            filters.people.forEach(p => {
+                personSelect.innerHTML += `<option value="${p}">${p}</option>`;
+            });
+
+            // Populate Projects (initial)
+            populateProjectsSelect(filters.projects);
+        }
+
+        function populateProjectsSelect(projects = null) {
+            const projSelect = document.getElementById('filter-project');
+            projSelect.innerHTML = '<option value="all">Todos los Proyectos</option>';
+            
+            const list = projects || liveData.filters.projects;
+            
+            let filteredList = list;
+            if (selectedClient !== "all") {
+                filteredList = list.filter(p => p.client_name === selectedClient);
+            }
+            
+            filteredList.forEach(p => {
+                projSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+            });
+        }
+
+        function onClientChange() {
+            selectedClient = document.getElementById('filter-client').value;
+            
+            // Cascade filter projects dropdown
+            populateProjectsSelect();
+            selectedProject = "all";
+            document.getElementById('filter-project').value = "all";
+            
+            fetchDashboardData();
+        }
+
+        function onProjectChange() {
+            selectedProject = document.getElementById('filter-project').value;
+            
+            if (selectedProject !== "all") {
+                // Find client for this project
+                const projObj = liveData.filters.projects.find(p => p.id == selectedProject);
+                if (projObj && selectedClient === "all") {
+                    selectedClient = projObj.client_name;
+                    document.getElementById('filter-client').value = selectedClient;
+                    populateProjectsSelect();
+                    document.getElementById('filter-project').value = selectedProject;
+                }
+            }
+            fetchDashboardData();
+        }
+
+        function onPersonChange() {
+            selectedPerson = document.getElementById('filter-person').value;
+            fetchDashboardData();
+        }
+
+        function resetFilters() {
+            selectedClient = "all";
+            selectedProject = "all";
+            selectedPerson = "all";
+            
+            document.getElementById('filter-client').value = "all";
+            document.getElementById('filter-person').value = "all";
+            populateProjectsSelect();
+            
+            fetchDashboardData();
+        }
+
+        function initCharts() {
+            // 1. Projects consumption bar chart
+            const ctxProj = document.getElementById('projectChart').getContext('2d');
+            projectChartInstance = new Chart(ctxProj, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Horas Imputadas',
+                            data: [],
+                            backgroundColor: 'rgba(139, 92, 246, 0.65)',
+                            borderColor: 'rgba(139, 92, 246, 1)',
+                            borderWidth: 1.5,
+                            borderRadius: 6,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Costo Calculado (€)',
+                            data: [],
+                            backgroundColor: 'rgba(236, 72, 153, 0.65)',
+                            borderColor: 'rgba(236, 72, 153, 1)',
+                            borderWidth: 1.5,
+                            borderRadius: 6,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', weight: '500' } } },
+                        tooltip: { backgroundColor: '#1e293b', titleColor: '#f8fafc', bodyColor: '#cbd5e1', borderColor: 'rgba(255, 255, 255, 0.1)', borderWidth: 1 }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } },
+                        y: { type: 'linear', display: true, position: 'left', grid: { color: 'rgba(148, 163, 184, 0.05)' }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } },
+                        y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } }
+                    }
+                }
+            });
+
+            // 2. WhatsApp Inbound Doughnut
+            const ctxWAInbound = document.getElementById('waInboundChart').getContext('2d');
+            waInboundChartInstance = new Chart(ctxWAInbound, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(245, 158, 11, 0.7)',
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(107, 114, 128, 0.7)',
+                            'rgba(6, 182, 212, 0.7)'
+                        ],
+                        borderColor: 'rgba(15, 23, 42, 0.9)',
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#94a3b8', boxWidth: 10, font: { family: 'Plus Jakarta Sans', size: 9 } } }
+                    }
+                }
+            });
+
+            // 2.1. WhatsApp Outbound Doughnut
+            const ctxWAOutbound = document.getElementById('waOutboundChart').getContext('2d');
+            waOutboundChartInstance = new Chart(ctxWAOutbound, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(139, 92, 246, 0.7)',
+                            'rgba(236, 72, 153, 0.7)',
+                            'rgba(245, 158, 11, 0.7)'
+                        ],
+                        borderColor: 'rgba(15, 23, 42, 0.9)',
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#94a3b8', boxWidth: 10, font: { family: 'Plus Jakarta Sans', size: 9 } } }
+                    }
+                }
+            });
+
+            // 3. Person Comparison
+            const ctxPers = document.getElementById('personChart').getContext('2d');
+            personChartInstance = new Chart(ctxPers, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Horas Fichadas',
+                            data: [],
+                            backgroundColor: 'rgba(59, 130, 246, 0.65)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1.5,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Horas Imputadas',
+                            data: [],
+                            backgroundColor: 'rgba(16, 185, 129, 0.65)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1.5,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', weight: '500' } } }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } },
+                        y: { grid: { color: 'rgba(148, 163, 184, 0.05)' }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } }
+                    }
+                }
+            });
+
+            // 4. Horas Fichadas Distribuídas por Obra
+            const ctxClockProj = document.getElementById('clockedProjectChart').getContext('2d');
+            clockedProjectChartInstance = new Chart(ctxClockProj, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Horas Fichadas Distribuídas',
+                        data: [],
+                        backgroundColor: 'rgba(59, 130, 246, 0.65)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', weight: '500' } } }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } },
+                        y: { grid: { color: 'rgba(148, 163, 184, 0.05)' }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } }
+                    }
+                }
+            });
+
+            // 5. Horas Fichadas Totales por Operario
+            const ctxClockPers = document.getElementById('clockedPersonChart').getContext('2d');
+            clockedPersonChartInstance = new Chart(ctxClockPers, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Horas Fichadas Totales',
+                        data: [],
+                        backgroundColor: 'rgba(139, 92, 246, 0.65)',
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        borderWidth: 1.5,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', weight: '500' } } }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } },
+                        y: { grid: { color: 'rgba(148, 163, 184, 0.05)' }, ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans' } } }
+                    }
+                }
+            });
+        }
+
+        function updateUI(payloadData) {
+            // Update KPIs
+            document.getElementById('kpi-projects').innerText = payloadData.kpis.total_projects;
+            document.getElementById('kpi-clocked').innerText = payloadData.kpis.total_hours_clocked.toLocaleString('es-ES') + ' h';
+            document.getElementById('kpi-imputed').innerText = payloadData.kpis.total_hours_imputed.toLocaleString('es-ES') + ' h';
+            document.getElementById('kpi-cost').innerText = payloadData.kpis.total_labor_cost.toLocaleString('es-ES', {style: 'currency', currency: 'EUR'});
+            document.getElementById('kpi-whatsapp').innerText = payloadData.kpis.total_whatsapp_reports.toLocaleString('es-ES');
+            document.getElementById('alerts-count').innerText = payloadData.alerts.length;
+
+            // Update Projects Chart
+            projectChartInstance.data.labels = payloadData.project_chart.labels;
+            projectChartInstance.data.datasets[0].data = payloadData.project_chart.hours;
+            projectChartInstance.data.datasets[1].data = payloadData.project_chart.cost;
+            projectChartInstance.update();
+
+            // Update WA Inbound Doughnut Chart
+            waInboundChartInstance.data.labels = payloadData.wa_inbound_chart.labels;
+            waInboundChartInstance.data.datasets[0].data = payloadData.wa_inbound_chart.values;
+            waInboundChartInstance.update();
+
+            // Update WA Outbound Doughnut Chart
+            waOutboundChartInstance.data.labels = payloadData.wa_outbound_chart.labels;
+            waOutboundChartInstance.data.datasets[0].data = payloadData.wa_outbound_chart.values;
+            waOutboundChartInstance.update();
+
+            // Update Clocked Hours by Project Chart
+            clockedProjectChartInstance.data.labels = payloadData.clocked_project_chart.labels;
+            clockedProjectChartInstance.data.datasets[0].data = payloadData.clocked_project_chart.values;
+            clockedProjectChartInstance.update();
+
+            // Update Clocked Hours by Person Chart
+            clockedPersonChartInstance.data.labels = payloadData.clocked_person_chart.labels;
+            clockedPersonChartInstance.data.datasets[0].data = payloadData.clocked_person_chart.values;
+            clockedPersonChartInstance.update();
+
+            // Update Person/Daily Chart
+            updatePersonChart();
+
+            // Render Tables
+            renderAlertsTable(payloadData.alerts);
+            renderProjectsTable(payloadData.detailed_projects);
+            renderOperariosTable(payloadData.operarios_summary);
+        }
+
+        function updatePersonChart() {
+            if (!liveData) return;
+            
+            const groupSelect = document.getElementById('chart-person-group');
+            if (selectedPerson !== "all" && groupSelect.value === "operario") {
+                groupSelect.value = "fecha";
+            }
+            
+            const groupBy = groupSelect.value;
+            const sortBy = document.getElementById('chart-person-sort').value;
+            const sortOrder = document.getElementById('chart-person-order').value;
+            
+            // Group records
+            const grouped = {};
+            liveData.daily_records.forEach(r => {
+                const key = groupBy === "operario" ? r.person_name : r.date;
+                if (!grouped[key]) {
+                    grouped[key] = { key: key, clocked: 0, imputed: 0 };
+                }
+                grouped[key].clocked += r.hours_worked;
+                grouped[key].imputed += r.hours_imputed;
+            });
+
+            const chartDataList = Object.values(grouped);
+            
+            // Sort
+            chartDataList.sort((a, b) => {
+                let valA, valB;
+                if (sortBy === "default") {
+                    valA = a.key;
+                    valB = b.key;
+                } else if (sortBy === "clocked") {
+                    valA = a.clocked;
+                    valB = b.clocked;
+                } else if (sortBy === "imputed") {
+                    valA = a.imputed;
+                    valB = b.imputed;
+                }
+                
+                if (typeof valA === "string") {
+                    return sortOrder === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
+                } else {
+                    return sortOrder === "asc" ? valA - valB : valB - valA;
+                }
+            });
+
+            const labels = chartDataList.map(item => item.key);
+            const clocked = chartDataList.map(item => item.clocked.toFixed(1));
+            const imputed = chartDataList.map(item => item.imputed.toFixed(1));
+
+            personChartInstance.data.labels = labels;
+            personChartInstance.data.datasets[0].data = clocked;
+            personChartInstance.data.datasets[1].data = imputed;
+            
+            personChartInstance.options.scales.x.title = {
+                display: true,
+                text: groupBy === "operario" ? "Operario" : "Fecha / Día",
+                color: '#64748b',
+                font: { family: 'Plus Jakarta Sans', weight: '600' }
+            };
+            personChartInstance.update();
+        }
+
+        function renderAlertsTable(alertsList) {
+            const alertsTbody = document.getElementById('alerts-tbody');
+            alertsTbody.innerHTML = '';
+            
+            if (alertsList.length === 0) {
+                alertsTbody.innerHTML = '<tr><td colspan="6" class="py-6 px-2 text-center text-slate-500">No se detectaron discrepancias entre fichajes e imputaciones para el filtro actual.</td></tr>';
+            } else {
+                alertsList.forEach(alert => {
+                    const statusColor = alert.difference > 0 ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' : 'text-red-400 bg-red-500/10 border-red-500/20';
+                    const statusText = alert.difference > 0 ? 'Horas faltantes por imputar' : 'Exceso de horas imputadas';
+                    const formattedDiff = alert.difference > 0 ? `+${alert.difference} h` : `${alert.difference} h`;
+                    
+                    alertsTbody.innerHTML += `
+                        <tr class="hover:bg-slate-900/20 transition-all font-outfit text-sm">
+                            <td class="py-3.5 px-2 font-medium text-slate-400">${alert.date}</td>
+                            <td class="py-3.5 px-2 text-white font-semibold">${alert.person_name}</td>
+                            <td class="py-3.5 px-2 text-right">${alert.hours_clocked} h</td>
+                            <td class="py-3.5 px-2 text-right">${alert.hours_imputed} h</td>
+                            <td class="py-3.5 px-2 text-right font-bold ${alert.difference > 0 ? 'text-amber-400' : 'text-red-400'}">${formattedDiff}</td>
+                            <td class="py-3.5 px-2 text-center">
+                                <span class="px-2.5 py-1 text-xs font-semibold rounded-full border ${statusColor}">${statusText}</span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function renderProjectsTable(projectsList) {
+            const projectsTbody = document.getElementById('projects-tbody');
+            projectsTbody.innerHTML = '';
+            
+            if (projectsList.length === 0) {
+                projectsTbody.innerHTML = '<tr><td colspan="7" class="py-6 px-2 text-center text-slate-500">No hay proyectos que coincidan con la selección de filtros.</td></tr>';
+            } else {
+                projectsList.forEach(proj => {
+                    const formattedBudget = proj.budget > 0 ? proj.budget.toLocaleString('es-ES', {style: 'currency', currency: 'EUR'}) : 'N/A';
+                    const formattedBase = proj.actual_cost > 0 ? proj.actual_cost.toLocaleString('es-ES', {style: 'currency', currency: 'EUR'}) : 'N/A';
+                    const formattedLabor = proj.calculated_labor_cost.toLocaleString('es-ES', {style: 'currency', currency: 'EUR'});
+                    
+                    projectsTbody.innerHTML += `
+                        <tr class="hover:bg-slate-900/20 transition-all text-sm font-outfit">
+                            <td class="py-3.5 px-2 text-white font-semibold">${proj.name}</td>
+                            <td class="py-3.5 px-2 text-slate-400 font-medium">${proj.client_name}</td>
+                            <td class="py-3.5 px-2">
+                                <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-800 text-slate-300 border border-slate-700">${proj.status}</span>
+                            </td>
+                            <td class="py-3.5 px-2 text-right">${formattedBudget}</td>
+                            <td class="py-3.5 px-2 text-right text-slate-500">${formattedBase}</td>
+                            <td class="py-3.5 px-2 text-right">${proj.hours_imputed} h</td>
+                            <td class="py-3.5 px-2 text-right font-bold text-purple-400">${formattedLabor}</td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function renderOperariosTable(operariosList) {
+            const operariosTbody = document.getElementById('operarios-tbody');
+            operariosTbody.innerHTML = '';
+            
+            if (operariosList.length === 0) {
+                operariosTbody.innerHTML = '<tr><td colspan="6" class="py-6 px-2 text-center text-slate-500">No hay operarios que coincidan con la selección de filtros.</td></tr>';
+            } else {
+                operariosList.forEach(op => {
+                    const totalMsg = op.whatsapp_outbound + op.whatsapp_inbound;
+                    const formattedCost = op.calculated_cost.toLocaleString('es-ES', {style: 'currency', currency: 'EUR'});
+                    operariosTbody.innerHTML += `
+                        <tr class="hover:bg-slate-900/20 transition-all text-sm font-outfit">
+                            <td class="py-3.5 px-2 text-white font-semibold">${op.name}</td>
+                            <td class="py-3.5 px-2 text-slate-400">${op.cargo} / <span class="text-slate-500 font-medium">${op.role}</span></td>
+                            <td class="py-3.5 px-2 text-right">${op.hours_clocked} h</td>
+                            <td class="py-3.5 px-2 text-right">${op.hours_imputed} h</td>
+                            <td class="py-3.5 px-2 text-right font-bold text-indigo-400">${formattedCost}</td>
+                            <td class="py-3.5 px-2 text-center">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20" title="Mensajes salientes y entrantes de WhatsApp">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+                                    ${totalMsg} reportes (${op.whatsapp_outbound} salientes, ${op.whatsapp_inbound} entrantes)
+                                </span>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        // Tab Switching function
+        function switchTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(el => el.classList.add('hidden'));
+            contents.forEach(el => el.classList.remove('block'));
+
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            document.getElementById('tab-' + tabId).classList.add('block');
+
+            const buttons = [
+                document.getElementById('tab-btn-alerts'),
+                document.getElementById('tab-btn-projects'),
+                document.getElementById('tab-btn-operarios')
+            ];
+            buttons.forEach(btn => {
+                btn.classList.remove('border-purple-500', 'text-white');
+                btn.classList.add('border-transparent', 'text-slate-400');
+            });
+
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            activeBtn.classList.remove('border-transparent', 'text-slate-400');
+            activeBtn.classList.add('border-purple-500', 'text-white');
+        }
+    </script>
+</body>
+</html>
