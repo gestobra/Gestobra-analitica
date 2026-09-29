@@ -1,0 +1,8 @@
+.env
+.git
+.gitignore
+.agents/
+__pycache__/
+*.pyc
+scratch/
+.system_generated/

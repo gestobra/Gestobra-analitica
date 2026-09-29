@@ -457,6 +457,13 @@ payload = {
 html_content = f"""<!DOCTYPE html>
 <html lang="es" class="h-full bg-slate-950">
 <head>
+    <script>
+        const pass = prompt("Por favor, introduce la contraseña para ver el dashboard:");
+        if (pass !== "gestobra2026") {{
+            document.write("<div style='background-color:#020617; height:100vh; width:100vw; position:fixed; top:0; left:0; display:flex; align-items:center; justify-content:center; color:white; font-family:sans-serif;'><h1>Acceso denegado. Contraseña incorrecta.</h1></div>");
+            window.stop();
+        }}
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GestObra BI Dashboard - Analítica Completa & Módulo "Sin Obra"</title>
